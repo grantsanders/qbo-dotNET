@@ -1,0 +1,26 @@
+﻿@page "/upload"
+
+<PageTitle>Upload</PageTitle>
+
+<MatFileUpload Style="margin: auto; vertical-align: middle; background-color: #292a2b; color: #c9c9c9; " OnChange="@FilesReady" Label="Drop a single file here or Browse"></MatFileUpload>
+
+
+@foreach (var f in list)
+{
+    <div>@f</div>
+}
+
+
+@code
+{
+    List<string> list = new List<string>();
+
+    void FilesReady(IMatFileUploadEntry[] files)
+    {
+        foreach (var file in files)
+        {
+            list.Add($"Name: {file.Name} - Size: {file.Size}");
+        }
+    }
+}
+
