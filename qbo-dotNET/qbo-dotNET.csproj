@@ -9,4 +9,15 @@
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
+  <ItemGroup>
+    <None Remove="AppGates.Net.MatBlazor" />
+    <None Remove="MatBlazor" />
+    <None Remove="Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MatBlazor" Version="2.8.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
 </Project>
