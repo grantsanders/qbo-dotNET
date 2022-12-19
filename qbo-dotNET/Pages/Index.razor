@@ -1,7 +1,11 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Mvc.RazorPages
+
+
 
 <PageTitle>Index</PageTitle>
 
 <h4>Sign into quickbooks below:</h4>
 
 
+<a asp-area="Controllers" asp-controller="Invoicing" asp-action="OAuth2"><img src="https://static.developer.intuit.com/images/C2QB_auth.png" /></a>

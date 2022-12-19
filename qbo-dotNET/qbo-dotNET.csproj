@@ -14,6 +14,7 @@
     <None Remove="MatBlazor" />
     <None Remove="Data\" />
     <None Remove="IppDotNetSdkForQuickBooksApiV3" />
+    <None Remove="Controllers\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MatBlazor" Version="2.8.0" />
@@ -21,5 +22,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 </Project>
