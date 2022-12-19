@@ -13,9 +13,11 @@
     <None Remove="AppGates.Net.MatBlazor" />
     <None Remove="MatBlazor" />
     <None Remove="Data\" />
+    <None Remove="IppDotNetSdkForQuickBooksApiV3" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MatBlazor" Version="2.8.0" />
+    <PackageReference Include="IppDotNetSdkForQuickBooksApiV3" Version="14.6.3.2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
