@@ -1,0 +1,33 @@
+﻿@page "/oauth2redirect"
+@using Intuit.Ipp.Core
+
+<PageTitle>Invoicing</PageTitle>
+
+<body class="invoicing">
+
+
+    <h4>Select a CSV:</h4>
+    <MatFileUpload OnChange="@FilesReady" Label="Drop a single file here or Browse" Style="background-color:#292a2b; border-bottom-color: #202021; "></MatFileUpload>
+
+    @foreach (var f in list)
+    {
+        <div>@f</div>
+    }
+
+</body>
+
+@code {
+
+    
+    
+    List<string> list = new List<string>();
+
+    void FilesReady(IMatFileUploadEntry[] files)
+    {
+        foreach (var file in files)
+        {
+            list.Add($"Name: {file.Name} - Size: {file.Size}");
+        }
+    }
+}
+

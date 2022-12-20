@@ -24,7 +24,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Invoicing}/{action=Index}/{id?}");
+
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
