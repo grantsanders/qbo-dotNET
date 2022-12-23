@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using qbo_dotNET.Logic;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<ApiHandler>();
+
 
 var app = builder.Build();
 

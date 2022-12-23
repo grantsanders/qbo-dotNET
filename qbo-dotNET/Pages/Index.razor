@@ -1,5 +1,8 @@
 ﻿@page "/"
 @using Intuit.Ipp.OAuth2PlatformClient
+@using qbo_dotNET.Logic
+@inject ApiHandler handler 
+@inject NavigationManager navigationManager
 
 <PageTitle>Home</PageTitle>
 
@@ -10,21 +13,15 @@
     <h4>Sign into quickbooks below:</h4>
 
 
-    <a href="" @onclick="InitiateOAuth2"><img src="https://blogs.intuit.com/wp-content/uploads/2019/04/C2QB_green_btn_med_default.png" width="150" height="50" /></a>
+    <a href="" @onclick="authRedirect"><img src="https://blogs.intuit.com/wp-content/uploads/2019/04/C2QB_green_btn_med_default.png" width="150" height="50" /></a>
 
 </body>
 
 @code {
-    public static OAuth2Client auth2Client = new OAuth2Client("ABgmNW1YLLBP9g4fl46KoKYCF5lumKaKR6vxkSdb7eycxwwvPy", "WzqNy1Mf8rb6hpsqQCVxmU2JijqAEnVWv1jgFhy3", "https://localhost:7247/oauth2redirect", "sandbox");
 
-
-    public void InitiateOAuth2()
-    {
-        List<OidcScopes> scopes = new List<OidcScopes>();
-        scopes.Add(OidcScopes.Accounting);
-        string authorizeUrl = auth2Client.GetAuthorizationURL(scopes);
-        @inject NavigationManager navigationManager
-        navigationManager.NavigateTo(authorizeUrl);
-    }
+    public void authRedirect()
+{
+        navigationManager.NavigateTo(handler.InitiateOAuth2());
+}
 
 }

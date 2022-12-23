@@ -15,6 +15,7 @@
     <None Remove="IppDotNetSdkForQuickBooksApiV3" />
     <None Remove="Models\" />
     <None Remove="CsvHelper" />
+    <None Remove="Logic\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MatBlazor" Version="2.8.0" />
@@ -23,5 +24,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
+    <Folder Include="Logic\" />
   </ItemGroup>
 </Project>
