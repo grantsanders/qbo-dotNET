@@ -6,15 +6,13 @@ namespace qbo_dotNET.Logic
 	{
 		public CsvHandler()
 		{
+			
 		}
 
-        public string? fileContent { get; set; }
+        public string? rawData { get; set; }
 
-		public void formatData(string fileContent) {
-
-
-
-
+		public void formatData(string rawData) {
+			
 		}
     }
 }

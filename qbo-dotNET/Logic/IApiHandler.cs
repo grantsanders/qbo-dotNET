@@ -13,7 +13,7 @@ namespace qbo_dotNET.Logic
 
         public OAuth2Client auth2Client { get; set; }
 
-        public string InitiateOAuth2() { return authorizeUrl; }
+        public string? InitiateOAuth2() { return authorizeUrl; }
 
         public async Task getServiceContext() {  }
 
