@@ -1,33 +1,106 @@
 ﻿@page "/oauth2redirect"
+@inject IApiHandler apiHandler
+@inject ICsvHandler csvHandler
 @using Intuit.Ipp.Core
+@using Intuit.Ipp.OAuth2PlatformClient
+@using System.Diagnostics
+@using System.Web
+
+
+@inject NavigationManager navigationManager
+
 
 <PageTitle>Invoicing</PageTitle>
 
 <body class="invoicing">
 
-
     <h4>Select a CSV:</h4>
-    <MatFileUpload OnChange="@FilesReady" Label="Drop a single file here or Browse" Style="background-color:#292a2b; border-bottom-color: #202021; "></MatFileUpload>
 
-    @foreach (var f in list)
+    @if (fileContent == null)
     {
-        <div>@f</div>
+        <MatFileUpload OnChange="@FilesReadyForContent" Label="Drop a single file here or Browse" Style="background-color:#292a2b; border-bottom-color: #202021; "></MatFileUpload>
     }
+    else
+    {
+            <div class="buttons">
+        <MatButton>Upload</MatButton> <MatButton>Clear</MatButton>
+            </div>
+    }
+    @*{<textarea style="width: 100%; max-height: 300px; height: 300px;">@fileContent</textarea>}*@
+
+
+
 
 
 </body>
 
 @code {
 
-    
-    List<string> list = new List<string>();
-
-    void FilesReady(IMatFileUploadEntry[] files)
+    protected override async Task OnInitializedAsync()
     {
-        foreach (var file in files)
+        string? code = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
+            .Split('&')
+            .FirstOrDefault(s => s.StartsWith("code="))
+            ?.Split('=')[1];
+
+        string? realmId = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
+            .Split('&')
+            .FirstOrDefault(s => s.StartsWith("realmId="))
+            ?.Split('=')[1];
+
+        apiHandler.getServiceContext();
+
+    }
+
+
+
+    string? fileContent;
+
+    async Task FilesReadyForContent(IMatFileUploadEntry[] files)
+    {
+        try
         {
-            list.Add($"Name: {file.Name} - Size: {file.Size}");
+            var file = files.FirstOrDefault();
+            if (file == null)
+            {
+                return;
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                var sw = Stopwatch.StartNew();
+                await file.WriteToStreamAsync(stream);
+                sw.Stop();
+                if (stream.Length > 1024 * 1024)
+                {
+                    fileContent = "";
+                    fileContent += $"Name:\t{file.Name}\r\n";
+                    fileContent += $"Type:\t{file.Type}\r\n";
+                    fileContent += $"LastModified:\t{file.LastModified}\r\n";
+                    fileContent += $"Size:\t{file.Size}\r\n";
+                    fileContent += $"Time:\t{sw.Elapsed}\r\n";
+                    fileContent += $"Speed:\t{(stream.Length / sw.Elapsed.TotalSeconds):N0}  b/s\r\n";
+                }
+                else
+                {
+                    stream.Seek(0, SeekOrigin.Begin);
+                    using (var reader = new StreamReader(stream))
+                    {
+                        fileContent = await reader.ReadToEndAsync();
+                    }
+                }
+            }
+        }
+
+        catch (Exception e)
+        {
+            fileContent = $"Error:\r\n{e.Message}\r\n{e.StackTrace}";
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
         }
     }
 }
+
 

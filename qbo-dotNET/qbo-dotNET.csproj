@@ -13,7 +13,6 @@
     <None Remove="AppGates.Net.MatBlazor" />
     <None Remove="MatBlazor" />
     <None Remove="IppDotNetSdkForQuickBooksApiV3" />
-    <None Remove="Models\" />
     <None Remove="CsvHelper" />
     <None Remove="Logic\" />
   </ItemGroup>
@@ -23,7 +22,6 @@
     <PackageReference Include="CsvHelper" Version="30.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="Logic\" />
   </ItemGroup>
 </Project>

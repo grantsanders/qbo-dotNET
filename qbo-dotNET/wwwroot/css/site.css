@@ -32,6 +32,10 @@ body {
     overflow: hidden;
 }
 
+.buttons {
+    flex-flow: row nowrap;
+}
+
 .invoicing {
     position: relative;
     height: 90vh;

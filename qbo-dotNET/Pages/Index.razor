@@ -1,7 +1,6 @@
 ﻿@page "/"
 @using Intuit.Ipp.OAuth2PlatformClient
-@using qbo_dotNET.Logic
-@inject ApiHandler handler 
+@inject IApiHandler apiHandler
 @inject NavigationManager navigationManager
 
 <PageTitle>Home</PageTitle>
@@ -21,7 +20,7 @@
 
     public void authRedirect()
 {
-        navigationManager.NavigateTo(handler.InitiateOAuth2());
+        navigationManager.NavigateTo(apiHandler.InitiateOAuth2());
 }
 
 }
