@@ -4,8 +4,9 @@ namespace qbo_dotNET.Logic
 	public interface ICsvHandler
 	{
 		public string? rawData { get; set; }
+        public IApiHandler api { get; set; }
 
-		public void formatData() { }
+        public void formatData() { }
 
 
 

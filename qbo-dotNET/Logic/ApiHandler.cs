@@ -15,15 +15,15 @@ namespace qbo_dotNET.Logic
     public class ApiHandler : IApiHandler
     {
 
-        public string? authorizeUrl { get; set; }
-        public string? code { get; set; }
-        public string? realmId { get; set; }
-        public string? accessToken { get; set; }
+        public string authorizeUrl { get; set; }
+        public string code { get; set; }
+        public string realmId { get; set; }
+        public string accessToken { get; set; }
         public OAuth2Client auth2Client { get; set; }
-        public ServiceContext? serviceContext { get; set; }
-        public DataService? service { get; set; }
-        public List<Item>? workingItemList { get; set; }
-        public List<Customer>? workingCustomerList { get; set; }
+        public ServiceContext serviceContext { get; set; }
+        public DataService service { get; set; }
+        public List<Item> itemDictionary { get; set; }
+        public List<Customer> customerDictionary { get; set; }
 
         public ApiHandler()
         {
@@ -38,27 +38,34 @@ namespace qbo_dotNET.Logic
             return authorizeUrl;
         }
 
-        
+
         public async System.Threading.Tasks.Task getServiceContext()
         {
             var tokenResponse = await auth2Client.GetBearerTokenAsync(code);
             accessToken = tokenResponse.AccessToken;
-            serviceContext = new ServiceContext(realmId, IntuitServicesType.QBO);
+            OAuth2RequestValidator oAuth2RequestValidator = new OAuth2RequestValidator(accessToken);
+            serviceContext = new ServiceContext(realmId, IntuitServicesType.QBO, oAuth2RequestValidator);
             serviceContext.IppConfiguration.BaseUrl.Qbo = "https://sandbox-quickbooks.api.intuit.com/";
+
             service = new DataService(serviceContext);
+
+            await getWorkingLists();
+        }
+
+
+        public async System.Threading.Tasks.Task getWorkingLists()
+        {
             Customer customer = new();
             Item item = new();
 
-            await System.Threading.Tasks.Task.Run(() =>
-            {
-                workingCustomerList = service.FindAll<Customer>(customer).ToList();
-                workingItemList = service.FindAll<Item>(item).ToList();
-            });
+            customerDictionary = service.FindAll(customer).ToList();
+            itemDictionary = service.FindAll(item).ToList();
         }
 
-        
 
-        public async System.Threading.Tasks.Task postInvoices (IEnumerable<Invoice> finalInvoiceList)
+
+
+        public async System.Threading.Tasks.Task postInvoices(IEnumerable<Invoice> finalInvoiceList)
         {
 
         }
