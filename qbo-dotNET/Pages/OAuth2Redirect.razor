@@ -98,7 +98,7 @@
 
                         fileContent = await reader.ReadToEndAsync();
                         csvHandler.rawData = fileContent;
-                        
+                        csvHandler.formatData();
                     }
                 }
             }

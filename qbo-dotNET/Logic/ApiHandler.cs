@@ -22,8 +22,8 @@ namespace qbo_dotNET.Logic
         public OAuth2Client auth2Client { get; set; }
         public ServiceContext serviceContext { get; set; }
         public DataService service { get; set; }
-        public List<Item> itemDictionary { get; set; }
-        public List<Customer> customerDictionary { get; set; }
+        public Dictionary<string, Item> itemDictionary { get; set; }
+        public Dictionary<string, Customer> customerDictionary { get; set; }
 
         public ApiHandler()
         {
@@ -55,11 +55,14 @@ namespace qbo_dotNET.Logic
 
         public async System.Threading.Tasks.Task getWorkingLists()
         {
-            Customer customer = new();
-            Item item = new();
+            Customer c = new();
+            Item i = new();
 
-            customerDictionary = service.FindAll(customer).ToList();
-            itemDictionary = service.FindAll(item).ToList();
+            IEnumerable<Customer> customerList = service.FindAll(c).ToList();
+            IEnumerable<Item> itemList = service.FindAll(i).ToList();
+
+            customerDictionary = customerList.ToDictionary(c => c.FullyQualifiedName, c => c);
+            itemDictionary = itemList.ToDictionary(i => i.Name, i => i);
         }
 
 
@@ -67,6 +70,11 @@ namespace qbo_dotNET.Logic
 
         public async System.Threading.Tasks.Task postInvoices(IEnumerable<Invoice> finalInvoiceList)
         {
+
+            foreach (Invoice invoice in finalInvoiceList)
+            {
+                service.Add(invoice);
+            }
 
         }
     }
