@@ -7,6 +7,11 @@
 html, body {
     font-family: 'Noto Sans JP', sans-serif;
     color: var(--color);
+    background: linear-gradient(-45deg, #161617, #1f1f21, #101710, #120d0d);
+    background-size: 400% 400%;
+    -webkit-animation: gradient 15s ease infinite;
+    animation: gradient 12s ease infinite;
+    overflow: hidden;
 }
 
 h4 {

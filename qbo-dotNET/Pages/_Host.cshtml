@@ -9,12 +9,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="~/" />
-    <script src="_content/MatBlazor/dist/matBlazor.js"></script>
-    <link href="_content/MatBlazor/dist/matBlazor.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="qbo-dotNET.styles.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="favicon.png" />
+    <script src="_content/MatBlazor/dist/matBlazor.js"></script>
+    <link href="_content/MatBlazor/dist/matBlazor.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&display=swap" rel="stylesheet">
@@ -22,6 +22,9 @@
 </head>
 
 <body>
+    <script src="_framework/blazor.server.js"></script>
+    <link href="css/site.css" rel="stylesheet" />
+
     <component type="typeof(App)" render-mode="ServerPrerendered" />
 
     <div id="blazor-error-ui">
@@ -35,7 +38,6 @@
         <a class="dismiss">🗙</a>
     </div>
 
-    <script src="_framework/blazor.server.js"></script>
 </body>
 </html>
 

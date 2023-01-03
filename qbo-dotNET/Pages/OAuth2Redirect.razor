@@ -1,10 +1,14 @@
 ﻿@page "/oauth2redirect"
-@inject IApiHandler apiHandler
 @inject ICsvHandler csvHandler
+@inject IApiHandler apiHandler
+
+
 @using Intuit.Ipp.Core
+@using Intuit.Ipp.Data
 @using Intuit.Ipp.OAuth2PlatformClient
 @using System.Diagnostics
 @using System.Web
+@using Microsoft.AspNetCore.Components;
 
 
 @inject NavigationManager navigationManager
@@ -23,7 +27,7 @@
     else
     {
         <div class="buttons">
-            <MatButton OnClick="post">Upload</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
+            <MatButton OnClick="@post">Upload</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
         </div>
     }
 
@@ -34,86 +38,88 @@
 
 @code {
 
-    string? fileContent;
+            string? fileContent;
 
-    protected override async Task OnInitializedAsync()
-    {
-        apiHandler.code = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
-            .Split('&')
-            .FirstOrDefault(s => s.StartsWith("code="))
-            ?.Split('=')[1];
-
-        apiHandler.realmId = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
-            .Split('&')
-            .FirstOrDefault(s => s.StartsWith("realmId="))
-            ?.Split('=')[1];
-
-        apiHandler.getServiceContext();
-        csvHandler.api = apiHandler;
-       
-    }
-
-    public void nullify()
-    {
-        fileContent = null;
-    }
-
-    async Task post()
-    {
-
-    }
-
-    async Task FilesReadyForContent(IMatFileUploadEntry[] files)
-    {
-
-        
-        try
+    protected override async System.Threading.Tasks.Task OnAfterRenderAsync(bool firstRender)
         {
-            var file = files.FirstOrDefault();
-            if (file == null)
+            if (firstRender)
             {
-                return;
+                apiHandler.code = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
+                    .Split('&')
+                    .FirstOrDefault(s => s.StartsWith("code="))
+                    ?.Split('=')[1];
+
+                apiHandler.realmId = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
+                    .Split('&')
+                    .FirstOrDefault(s => s.StartsWith("realmId="))
+                    ?.Split('=')[1];
+
+                apiHandler.getServiceContext();
             }
+        }
 
-            using (var stream = new MemoryStream())
+
+        public void nullify()
+        {
+
+            fileContent = null;
+        }
+
+        async System.Threading.Tasks.Task post()
+        {
+
+        }
+
+        async System.Threading.Tasks.Task FilesReadyForContent(IMatFileUploadEntry[] files)
+        {
+
+            try
             {
-                var sw = Stopwatch.StartNew();
-                await file.WriteToStreamAsync(stream);
-                sw.Stop();
-                if (stream.Length > 1024 * 1024)
+                var file = files.FirstOrDefault();
+                if (file == null)
                 {
-                    fileContent = "";
-                    fileContent += $"Name:\t{file.Name}\r\n";
-                    fileContent += $"Type:\t{file.Type}\r\n";
-                    fileContent += $"LastModified:\t{file.LastModified}\r\n";
-                    fileContent += $"Size:\t{file.Size}\r\n";
-                    fileContent += $"Time:\t{sw.Elapsed}\r\n";
-                    fileContent += $"Speed:\t{(stream.Length / sw.Elapsed.TotalSeconds):N0}  b/s\r\n";
+                    return;
                 }
-                else
-                {
-                    stream.Seek(0, SeekOrigin.Begin);
-                    using (var reader = new StreamReader(stream))
-                    {   
 
-                        fileContent = await reader.ReadToEndAsync();
-                        csvHandler.rawData = fileContent;
-                        csvHandler.formatData();
+                using (var stream = new MemoryStream())
+                {
+                    var sw = Stopwatch.StartNew();
+                    await file.WriteToStreamAsync(stream);
+                    sw.Stop();
+                    if (stream.Length > 1024 * 1024)
+                    {
+                        fileContent = "";
+                        fileContent += $"Name:\t{file.Name}\r\n";
+                        fileContent += $"Type:\t{file.Type}\r\n";
+                        fileContent += $"LastModified:\t{file.LastModified}\r\n";
+                        fileContent += $"Size:\t{file.Size}\r\n";
+                        fileContent += $"Time:\t{sw.Elapsed}\r\n";
+                        fileContent += $"Speed:\t{(stream.Length / sw.Elapsed.TotalSeconds):N0}  b/s\r\n";
+                    }
+                    else
+                    {
+                        stream.Seek(0, SeekOrigin.Begin);
+                        using (var reader = new StreamReader(stream))
+                        {
+
+                            fileContent = await reader.ReadToEndAsync();
+                            csvHandler.rawData = fileContent;
+                            csvHandler.formatData();
+                        }
                     }
                 }
             }
-        }
 
-        catch (Exception e)
-        {
-            fileContent = $"Error:\r\n{e.Message}\r\n{e.StackTrace}";
-        }
-        finally
-        {
-            csvHandler.rawData = fileContent;
-            await InvokeAsync(StateHasChanged);
+            catch (Exception e)
+            {
+                fileContent = $"Error:\r\n{e.Message}\r\n{e.StackTrace}";
+            }
+            finally
+            {
+                csvHandler.rawData = fileContent;
+                await InvokeAsync(StateHasChanged);
+            }
         }
     }
-}
 
 

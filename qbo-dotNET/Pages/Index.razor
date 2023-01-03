@@ -1,10 +1,10 @@
 ﻿@page "/"
 @using Intuit.Ipp.OAuth2PlatformClient
 @inject IApiHandler apiHandler
+
 @inject NavigationManager navigationManager
 
 <PageTitle>Home</PageTitle>
-
 
 <body class="home">
 
@@ -19,8 +19,8 @@
 @code {
 
     public void authRedirect()
-{
+    {
         navigationManager.NavigateTo(apiHandler.InitiateOAuth2());
-}
+    }
 
 }
