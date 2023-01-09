@@ -12,6 +12,7 @@ namespace qbo_dotNET.Logic
     {
         public string? rawData { get; set; }
         private readonly IApiHandler _api;
+        public List<Invoice> finalInvoiceList { get; set; }
 
         public CsvHandler(IApiHandler api)
         {
@@ -55,7 +56,7 @@ new JsonConverter[] { new StringEnumConverter() });
                     {
                         Line line = mapper.Map<Line>(row);
                         Item item = new();
-
+                        
                         if (_api.itemDictionary.TryGetValue(row.LineDesc, out item))
                         {
 
@@ -83,17 +84,27 @@ new JsonConverter[] { new StringEnumConverter() });
                                 Value = "85",
                             };
                             item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
-                            _api.updateItem(item);
+
+                            item = _api.updateItem(item);  //todo: make this work
                             _api.getWorkingLists();
                         }
+
+                        SalesItemLineDetail salesItemLineDetail = new();
+                        salesItemLineDetail.ItemRef = new ReferenceType
+                        {
+                            Value = item.Id
+                        };
+
+                        line.AnyIntuitObject = salesItemLineDetail;
 
                     }
 
                     invoice.Line = lines.ToArray();
                     finalInvoiceList.Add(invoice);
                 }
-                Console.WriteLine("DONE");
-                //_api.postInvoices(finalInvoiceList);
+                Console.WriteLine("Done sorting items and lines");
+
+
             }
 
         }

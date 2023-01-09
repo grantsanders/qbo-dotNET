@@ -23,7 +23,7 @@ namespace qbo_dotNET.Logic
         public ServiceContext serviceContext { get; set; }
         public DataService service { get; set; }
         public Dictionary<string, Item>? itemDictionary { get; set; }
-        public Dictionary<string, Customer> customerDictionary { get; set; }
+        public Dictionary<string, Customer>? customerDictionary { get; set; }
 
         public ApiHandler()
         {
@@ -50,7 +50,8 @@ namespace qbo_dotNET.Logic
             service = new DataService(serviceContext);
 
             await getWorkingLists();
-            Console.WriteLine("Done");
+
+            Console.WriteLine("Lists updated");
         }
 
         public async System.Threading.Tasks.Task getWorkingLists()
@@ -73,7 +74,7 @@ namespace qbo_dotNET.Logic
             }
         }
 
-        public async System.Threading.Tasks.Task updateItem(Item item) { try { service.Update<Item>(item); } catch (Intuit.Ipp.Exception.IdsException ex) { Console.WriteLine(ex.Message); Console.WriteLine(ex.Data); } }
+        public async System.Threading.Tasks.Task updateItem(Item item) => service.Update<Item>(item);
 
     }
 }
