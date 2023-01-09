@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Globalization;
+using AutoMapper;
 using CsvHelper;
 using Intuit.Ipp.Data;
-
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace qbo_dotNET.Logic
 {
@@ -17,7 +18,16 @@ namespace qbo_dotNET.Logic
             _api = api;
         }
 
-        public  void formatData()
+        public void test(object obj)
+        {
+            var jsonString = JsonConvert.SerializeObject(
+obj, Formatting.Indented,
+new JsonConverter[] { new StringEnumConverter() });
+
+            Console.WriteLine(jsonString);
+        }
+
+        public void formatData()
         {
 
             using (StringReader reader = new StringReader(rawData))
@@ -25,29 +35,65 @@ namespace qbo_dotNET.Logic
             {
                 csv.Context.RegisterClassMap<CsvRowMap>();
                 var records = csv.GetRecords<CsvRow>().ToList();
-
                 var groups = records.GroupBy(row => row.RefNumber);
-
                 List<Invoice> finalInvoiceList = new();
 
-                foreach (KeyValuePair<string, Item> kvp in _api.itemDictionary)
+                foreach (var group in groups)
                 {
-                    Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+                    var config = new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile<CsvRowToLineProfile>();
+                    });
+
+                    var mapper = config.CreateMapper();
+                    int refNumber = group.Key;
+                    List<CsvRow> rowsByRef = group.ToList();
+                    Invoice invoice = new();
+                    List<Line> lines = new();
+
+                    foreach (var row in rowsByRef)
+                    {
+                        Line line = mapper.Map<Line>(row);
+                        Item item = new();
+
+                        if (_api.itemDictionary.TryGetValue(row.LineDesc, out item))
+                        {
+
+                            Console.WriteLine("Found, " + item.Name);
+                            if (!item.Active)
+                            {
+                                item.Active = true;
+                                item.sparse = true;
+                                _api.updateItem(item);
+                            }
+                            if (item.UnitPrice != (decimal.Parse(row.LineUnitPrice)))
+                            {
+                                item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
+                            }
+                        }
+                        else
+                        {
+                            item = new();
+                            item.sparse = true;
+                            item.TypeSpecified = true;
+                            item.Name = row.LineDesc;
+                            item.Type = ItemTypeEnum.NonInventory;
+                            item.IncomeAccountRef = new ReferenceType()
+                            {
+                                Value = "85",
+                            };
+                            item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
+                            _api.updateItem(item);
+                            _api.getWorkingLists();
+                        }
+
+                    }
+
+                    invoice.Line = lines.ToArray();
+                    finalInvoiceList.Add(invoice);
                 }
-
-                //foreach (var group in groups)
-                //{
-                //    int refNumber = group.Key;
-                //    List<CsvRow> rowsByRef = group.ToList();
-                //    Invoice invoice = new();
-                //    List<Line> lines = new();
-
-                //    foreach (var row in rowsByRef)
-                //    {
-
-                //    }
-                //}
-
+                Console.WriteLine("DONE");
+                //_api.postInvoices(finalInvoiceList);
             }
 
         }

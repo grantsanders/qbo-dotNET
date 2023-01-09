@@ -5,8 +5,8 @@ namespace qbo_dotNET.Logic
 	{
 		
 		public string? rawData { get; set; }
-		public void formatData() { }
-        
+		//public async Task formatData() { }
+        public void formatData() { }
 
         }
     }

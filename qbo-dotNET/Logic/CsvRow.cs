@@ -42,9 +42,10 @@ namespace qbo_dotNET.Logic
         public string? PrintSalesOrder { get; set; }
         public string? PONumber { get; set; }
         public string? CustomerAccountNotes { get; set; }
-        public SalesItemLineDetail salesItemLineDetail = new();
+        public LineDetailTypeEnum salesItemLineDetail = LineDetailTypeEnum.SalesItemLineDetail;
         public TaxLineDetail taxLineDetail = new();
         public ReferenceType referenceType = new();
+        public bool DetailTypeSpecified = true;
     }
 
 }

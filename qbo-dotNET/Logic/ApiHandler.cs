@@ -46,7 +46,7 @@ namespace qbo_dotNET.Logic
             OAuth2RequestValidator oAuth2RequestValidator = new OAuth2RequestValidator(accessToken);
             serviceContext = new ServiceContext(realmId, IntuitServicesType.QBO, oAuth2RequestValidator);
             serviceContext.IppConfiguration.BaseUrl.Qbo = "https://sandbox-quickbooks.api.intuit.com/";
-
+            serviceContext.IppConfiguration.MinorVersion.Qbo = "55";
             service = new DataService(serviceContext);
 
             await getWorkingLists();
@@ -65,7 +65,7 @@ namespace qbo_dotNET.Logic
             itemDictionary = itemList.ToDictionary(i => i.Name, i => i);
         }
 
-        public async System.Threading.Tasks.Task postInvoices(IEnumerable<Invoice> finalInvoiceList)
+        public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList)
         {
             foreach (Invoice invoice in finalInvoiceList)
             {
@@ -73,6 +73,7 @@ namespace qbo_dotNET.Logic
             }
         }
 
+        public async System.Threading.Tasks.Task updateItem(Item item) { try { service.Update<Item>(item); } catch (Intuit.Ipp.Exception.IdsException ex) { Console.WriteLine(ex.Message); Console.WriteLine(ex.Data); } }
 
     }
 }
