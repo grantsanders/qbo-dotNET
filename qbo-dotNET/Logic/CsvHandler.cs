@@ -48,19 +48,37 @@ new JsonConverter[] { new StringEnumConverter() });
 
                 foreach (var group in groups)
                 {
-                    var config = new MapperConfiguration(cfg =>
+
+
+                    var invoiceMapperConfig = new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile<CsvRowToInvoiceProfile>();
+                    });
+                    var invoiceMapper = invoiceMapperConfig.CreateMapper();
+
+
+                    var lineMapperConfig = new MapperConfiguration(cfg =>
                     {
                         cfg.AddProfile<CsvRowToLineProfile>();
                     });
 
-                    var mapper = config.CreateMapper();
+
+                    var lineMapper = lineMapperConfig.CreateMapper();
                     int refNumber = group.Key;
                     List<CsvRow> rowsByRef = group.ToList();
                     List<Line> lines = new();
+                    Invoice invoice = new();
+
 
                     foreach (var row in rowsByRef)
                     {
-                        Line line = mapper.Map<Line>(row);
+
+                        try
+                        {
+                            invoice = invoiceMapper.Map<Invoice>(row);
+                        } catch (AutoMapperMappingException ex) { Console.WriteLine(ex.Message + "\n" + ex.Data); }
+
+                        Line line = lineMapper.Map<Line>(row);
                         Item item = new();
 
                         if (_api.itemDictionary.TryGetValue(row.LineDesc, out item))
@@ -98,7 +116,7 @@ new JsonConverter[] { new StringEnumConverter() });
                             item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
 
                             Task<Item> returnedItemResult = _api.updateItem(item);
-                            item = await returnedItemResult; 
+                            item = await returnedItemResult;
                             _api.getWorkingLists();
                         }
 
@@ -117,20 +135,17 @@ new JsonConverter[] { new StringEnumConverter() });
                         };
                         //tag line with item info
                         line.AnyIntuitObject = salesItemLineDetail;
-
                         lines.Add(line);
+
+
+
                     }
-
-
-                    config = new MapperConfiguration(cfg =>
-                    {
-                        cfg.AddProfile<CsvRowToInvoiceProfile>();
-                    });
-                    mapper = config.CreateMapper();
 
                     invoice.Line = lines.ToArray();
 
-                    finalInvoiceList.Add(invoice);
+                    test(invoice);
+
+                    Console.WriteLine("\n\n\n");
                 }
                 Console.WriteLine("Done sorting items and lines");
                 watch.Stop();

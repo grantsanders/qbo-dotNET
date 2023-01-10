@@ -25,7 +25,7 @@ public sealed class CsvRowMap : ClassMap<CsvRow>
         Map(m => m.ShipAddrCountry).Name("ShipAddrCountry");
         Map(m => m.PrivateNote).Name("PrivateNote");
         Map(m => m.Msg).Name("Msg");
-        Map(m => m.BillEmail).Name("BillEmail");
+        Map(m => m.BillEmailCsv).Name("BillEmail");
         Map(m => m.LineItem).Name("LineItem");
         Map(m => m.LineUom).Name("LineUom");
         Map(m => m.LineQty).Name("LineQty");

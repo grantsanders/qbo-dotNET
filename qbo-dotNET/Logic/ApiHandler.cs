@@ -74,7 +74,7 @@ namespace qbo_dotNET.Logic
             }
         }
 
-        public async System.Threading.Tasks.Task<Item> updateItem(Item item) { return await Task.FromResult(service.Update<Item>(item)); }
+        public async System.Threading.Tasks.Task<Item> updateItem(Item item) { return await System.Threading.Tasks.Task.FromResult(service.Update<Item>(item)); }
 
     }
 }

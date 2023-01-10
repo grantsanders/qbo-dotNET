@@ -8,6 +8,35 @@ namespace qbo_dotNET.Logic
         public CsvRow()
         {
             referenceType.name = LineDesc;
+            ShipAddr = new()
+            {
+                Line1 = ShipAddrLine1,
+                Line2 = ShipAddrLine2,
+                Line3 = ShipAddrLine3,
+                City = ShipAddrCity,
+                PostalCode = ShipAddrPostalCode,
+                Country = ShipAddrCountry
+            };
+            BillAddr = new()
+            {
+                Line1 = BillAddrLine1,
+                Line2 = BillAddrLine2,
+                Line3 = BillAddrLine3,
+                City = BillAddrCity,
+                PostalCode = BillAddrPostalCode,
+                Country = BillAddrCountry
+            };
+            BillEmail.Address = BillEmailCsv;
+
+            CustomerMemo = new()
+            {
+                Value = Msg
+            };
+
+            taxLineDetail = new()
+            {
+                TaxPercent = 0
+            };
         }
 
         public int RefNumber { get; set; }
@@ -30,7 +59,7 @@ namespace qbo_dotNET.Logic
         public string? ShipAddrCountry { get; set; }
         public string? PrivateNote { get; set; }
         public string? Msg { get; set; }
-        public string? BillEmail { get; set; }
+        public string? BillEmailCsv { get; set; }
         public string? LineItem { get; set; }
         public string? LineUom { get; set; }
         public string? LineQty { get; set; }
@@ -42,9 +71,15 @@ namespace qbo_dotNET.Logic
         public string? PrintSalesOrder { get; set; }
         public string? PONumber { get; set; }
         public string? CustomerAccountNotes { get; set; }
+
+        //intuit specific objects
         public LineDetailTypeEnum salesItemLineDetail = LineDetailTypeEnum.SalesItemLineDetail;
         public TaxLineDetail taxLineDetail = new();
         public ReferenceType referenceType = new();
+        public PhysicalAddress BillAddr;
+        public PhysicalAddress ShipAddr;
+        public MemoRef CustomerMemo;
+        public EmailAddress BillEmail = new();
         public bool DetailTypeSpecified = true;
         public bool AllowOnlineACHPayment = true;
     }
