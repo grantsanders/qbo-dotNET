@@ -11,8 +11,9 @@ namespace qbo_dotNET.Logic
 {
     public class CsvHandler : ICsvHandler
     {
-        public string? rawData { get; set; }
+        public string rawData { get; set; }
         private readonly IApiHandler _api;
+
         public List<Invoice> finalInvoiceList { get; set; }
 
         public CsvHandler(IApiHandler api)
@@ -70,11 +71,14 @@ new JsonConverter[] { new StringEnumConverter() });
                             {
                                 item.Active = true;
                                 item.sparse = true;
-                                _api.updateItem(item);
+                                Task<Item> returnedItemResult = _api.updateItem(item);
+                                item = await returnedItemResult;
                             }
                             if (item.UnitPrice != (decimal.Parse(row.LineUnitPrice)))
                             {
                                 item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
+                                Task<Item> returnedItemResult = _api.updateItem(item);
+                                item = await returnedItemResult;
                             }
                         }
 
@@ -90,10 +94,11 @@ new JsonConverter[] { new StringEnumConverter() });
                             {
                                 Value = "85",
                             };
+
                             item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
 
                             Task<Item> returnedItemResult = _api.updateItem(item);
-                            item = await returnedItemResult; //todo: make this work
+                            item = await returnedItemResult; 
                             _api.getWorkingLists();
                         }
 

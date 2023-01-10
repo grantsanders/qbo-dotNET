@@ -47,7 +47,6 @@ namespace qbo_dotNET.Logic
         public ReferenceType referenceType = new();
         public bool DetailTypeSpecified = true;
         public bool AllowOnlineACHPayment = true;
-        public bool AllowOnlineCreditCardPayment = true;
     }
 
 }

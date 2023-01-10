@@ -12,13 +12,9 @@ namespace qbo_dotNET.Logic
                 .ForMember(dest => dest.TxnDate, opt => opt.MapFrom(src => src.TxnDate))
                 .ForMember(dest => dest.CustomerMemo, opt => opt.MapFrom(src => src.Msg))
                 .ForMember(dest => dest.BillEmail, opt => opt.MapFrom(src => src.BillEmail))
-                .ForMember(dest => dest.ShipAddr, opt => opt.MapFrom(src => src.ShipAddrLine1))
-                .ForMember(dest => dest.AllowOnlineCreditCardPayment, opt => opt.MapFrom(src => src.AllowOnlineCreditCardPayment))
+                .ForMember(dest => dest.ShipAddr, opt => opt.MapFrom(src => src.ShipAddr))
                 .ForMember(dest => dest.AllowOnlineACHPayment, opt => opt.MapFrom(src => src.AllowOnlineACHPayment))
-                .ForMember(dest => dest.AllowOnlinePayment, opt => opt.MapFrom(src => src.AllowOnlinePayment))
-                .ForMember(dest => dest.BillAddr, opt => opt.MapFrom(src => src.BillAddr))
-                .ForMember(dest => dest.TxnStatus, opt => opt.MapFrom(src => src.TxnStatus
-
+                .ForMember(dest => dest.BillAddr, opt => opt.MapFrom(src => src.BillAddr));
         }
     }
 }

@@ -22,8 +22,8 @@ namespace qbo_dotNET.Logic
         public OAuth2Client auth2Client { get; set; }
         public ServiceContext serviceContext { get; set; }
         public DataService service { get; set; }
-        public Dictionary<string, Item>? itemDictionary { get; set; }
-        public Dictionary<string, Customer>? customerDictionary { get; set; }
+        public Dictionary<string, Item> itemDictionary { get; set; }
+        public Dictionary<string, Customer> customerDictionary { get; set; }
 
         public ApiHandler()
         {
@@ -74,7 +74,7 @@ namespace qbo_dotNET.Logic
             }
         }
 
-        public async System.Threading.Tasks.Task<Item> updateItem(Item item) { return await System.Threading.Tasks.Task.FromResult(service.Update<Item>(item)); }
+        public async System.Threading.Tasks.Task<Item> updateItem(Item item) { return await Task.FromResult(service.Update<Item>(item)); }
 
     }
 }
