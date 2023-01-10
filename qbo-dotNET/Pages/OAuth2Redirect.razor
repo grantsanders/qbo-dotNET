@@ -27,7 +27,7 @@
     else
     {
         <div class="buttons">
-            <MatButton OnClick="@csvHandler.formatData">Format</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
+            <MatButton OnClick="@post">Upload</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
         </div>
     }
 
@@ -67,7 +67,8 @@
 
     async System.Threading.Tasks.Task post()
     {
-
+        apiHandler.postInvoices(csvHandler.finalInvoiceList);
+        
     }
 
     async System.Threading.Tasks.Task FilesReadyForContent(IMatFileUploadEntry[] files)
@@ -104,7 +105,7 @@
                         fileContent = await reader.ReadToEndAsync();
                         csvHandler.rawData = fileContent;
                         Console.WriteLine("Data Stored");
-
+                        csvHandler.formatData();
                     }
                 }
             }

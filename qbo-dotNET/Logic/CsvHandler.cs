@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using AutoMapper;
 using CsvHelper;
@@ -28,8 +29,12 @@ new JsonConverter[] { new StringEnumConverter() });
             Console.WriteLine(jsonString);
         }
 
-        public void formatData()
+        public async System.Threading.Tasks.Task formatData()
         {
+
+            Stopwatch watch = new();
+            watch.Start();
+
 
             using (StringReader reader = new StringReader(rawData))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
@@ -38,6 +43,7 @@ new JsonConverter[] { new StringEnumConverter() });
                 var records = csv.GetRecords<CsvRow>().ToList();
                 var groups = records.GroupBy(row => row.RefNumber);
                 List<Invoice> finalInvoiceList = new();
+
 
                 foreach (var group in groups)
                 {
@@ -49,14 +55,13 @@ new JsonConverter[] { new StringEnumConverter() });
                     var mapper = config.CreateMapper();
                     int refNumber = group.Key;
                     List<CsvRow> rowsByRef = group.ToList();
-                    Invoice invoice = new();
                     List<Line> lines = new();
 
                     foreach (var row in rowsByRef)
                     {
                         Line line = mapper.Map<Line>(row);
                         Item item = new();
-                        
+
                         if (_api.itemDictionary.TryGetValue(row.LineDesc, out item))
                         {
 
@@ -72,8 +77,10 @@ new JsonConverter[] { new StringEnumConverter() });
                                 item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
                             }
                         }
+
                         else
                         {
+                            Console.WriteLine("Bong");
                             item = new();
                             item.sparse = true;
                             item.TypeSpecified = true;
@@ -85,26 +92,51 @@ new JsonConverter[] { new StringEnumConverter() });
                             };
                             item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
 
-                            item = _api.updateItem(item);  //todo: make this work
+                            Task<Item> returnedItemResult = _api.updateItem(item);
+                            item = await returnedItemResult; //todo: make this work
                             _api.getWorkingLists();
                         }
 
-                        SalesItemLineDetail salesItemLineDetail = new();
-                        salesItemLineDetail.ItemRef = new ReferenceType
+                        line.DetailType = LineDetailTypeEnum.SalesItemLineDetail;
+                        line.DetailTypeSpecified = true;
+
+                        SalesItemLineDetail salesItemLineDetail = new()
                         {
-                            Value = item.Id
+                            Qty = (decimal.Parse(row.LineQty)),
+                            QtySpecified = true
                         };
 
+                        salesItemLineDetail.ItemRef = new ReferenceType
+                        {
+                            Value = item.Id,
+                        };
+                        //tag line with item info
                         line.AnyIntuitObject = salesItemLineDetail;
 
+                        lines.Add(line);
                     }
 
+
+                    config = new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile<CsvRowToInvoiceProfile>();
+                    });
+                    mapper = config.CreateMapper();
+
                     invoice.Line = lines.ToArray();
+
                     finalInvoiceList.Add(invoice);
                 }
                 Console.WriteLine("Done sorting items and lines");
+                watch.Stop();
 
+                TimeSpan ts = watch.Elapsed;
 
+                // Format and display the TimeSpan value.
+                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                    ts.Hours, ts.Minutes, ts.Seconds,
+                    ts.Milliseconds / 10);
+                Console.WriteLine("Processed all items in " + elapsedTime);
             }
 
         }

@@ -21,7 +21,7 @@ namespace qbo_dotNET.Logic
 
         public async System.Threading.Tasks.Task test() { }
 
-        public async System.Threading.Tasks.Task updateItem(Item item) { }
+        public async System.Threading.Tasks.Task<Item> updateItem(Item item) { return item; }
 
         public async System.Threading.Tasks.Task getWorkingLists() { }
     }

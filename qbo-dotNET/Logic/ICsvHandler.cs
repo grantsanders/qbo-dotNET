@@ -7,7 +7,7 @@ namespace qbo_dotNET.Logic
 	{
 		public List<Invoice> finalInvoiceList { get; set; }
 		public string? rawData { get; set; }
-        public void formatData() { }
+        public async System.Threading.Tasks.Task formatData() { }
 		
 
         }
