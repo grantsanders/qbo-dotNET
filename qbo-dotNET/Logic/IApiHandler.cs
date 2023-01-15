@@ -1,5 +1,7 @@
 ﻿using System;
+using Intuit.Ipp.Core;
 using Intuit.Ipp.Data;
+using Intuit.Ipp.DataService;
 using Intuit.Ipp.OAuth2PlatformClient;
 
 namespace qbo_dotNET.Logic
@@ -9,10 +11,16 @@ namespace qbo_dotNET.Logic
         public string authorizeUrl { get; set; }
         public string code { get; set; }
         public string realmId { get; set; }
-        public string? InitiateOAuth2() { return authorizeUrl; }
+        public string accessToken { get; set; }
+        public string clientId { get; set; }
+        public string clientSecret { get; set; }
+        public OAuth2Client auth2Client { get; set; }
+        public ServiceContext serviceContext { get; set; }
+        public DataService service { get; set; }
         public Dictionary<string, Item> itemDictionary { get; set; }
         public Dictionary<string, Customer> customerDictionary { get; set; }
-        public OAuth2Client auth2Client { get; set; }
+
+        public string? InitiateOAuth2() { return authorizeUrl; }
 
         public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList) { }
 
