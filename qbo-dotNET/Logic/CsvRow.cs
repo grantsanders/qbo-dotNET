@@ -81,6 +81,7 @@ namespace qbo_dotNET.Logic
         public MemoRef CustomerMemo;
         public EmailAddress BillEmail = new();
         public bool DetailTypeSpecified = true;
+        public bool AmountSpecified = true;
         public bool AllowOnlineACHPayment = true;
     }
 

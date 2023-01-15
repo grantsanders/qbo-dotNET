@@ -22,8 +22,8 @@ namespace qbo_dotNET.Logic
         public OAuth2Client auth2Client { get; set; }
         public ServiceContext serviceContext { get; set; }
         public DataService service { get; set; }
-        public Dictionary<string, Item> itemDictionary { get; set; }
-        public Dictionary<string, Customer> customerDictionary { get; set; }
+        public Dictionary<string, Item>? itemDictionary { get; set; }
+        public Dictionary<string, Customer>? customerDictionary { get; set; }
 
         public ApiHandler()
         {
@@ -62,19 +62,30 @@ namespace qbo_dotNET.Logic
             IEnumerable<Customer> customerList = service.FindAll(c).ToList();
             IEnumerable<Item> itemList = service.FindAll(i).ToList();
 
-            customerDictionary = customerList.ToDictionary(c => c.FullyQualifiedName, c => c);
+            customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c);
             itemDictionary = itemList.ToDictionary(i => i.Name, i => i);
         }
 
         public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList)
         {
-            foreach (Invoice invoice in finalInvoiceList)
+
+            try
             {
-                service.Add(invoice);
-            }
+                foreach (Invoice invoice in finalInvoiceList)
+                {
+                    service.Add<Invoice>(invoice);
+                    Console.WriteLine("Invoice added: " + invoice.CustomerRef.name);
+                }
+            } catch (Intuit.Ipp.Exception.IdsException ex) { Console.WriteLine(ex.Message + "\n" + ex.Data + "\n" + ex.StackTrace); }
         }
 
+        public async System.Threading.Tasks.Task updateCustomerDictionary() => customerDictionary = customerDictionary = service.FindAll(new Customer()).ToList().ToDictionary(c => c.DisplayName, c => c) ?? new Dictionary<string, Customer>();
+
+        public async System.Threading.Tasks.Task updateItemDictionary() => itemDictionary = service.FindAll(new Item()).ToList().ToDictionary(i => i.Name, i => i) ?? new Dictionary<string, Item>();
+
         public async System.Threading.Tasks.Task<Item> updateItem(Item item) { return await System.Threading.Tasks.Task.FromResult(service.Update<Item>(item)); }
+
+        public async System.Threading.Tasks.Task<Customer> updateCustomer(Customer customer) { return await System.Threading.Tasks.Task.FromResult(service.Update<Customer>(customer)); }
 
     }
 }
