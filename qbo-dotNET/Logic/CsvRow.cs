@@ -37,6 +37,11 @@ namespace qbo_dotNET.Logic
             {
                 TaxPercent = 0
             };
+
+            CustomerRef = new()
+            {
+                name = Customer
+            };
         }
 
         public int RefNumber { get; set; }
@@ -75,6 +80,7 @@ namespace qbo_dotNET.Logic
         //intuit specific objects
         public LineDetailTypeEnum salesItemLineDetail = LineDetailTypeEnum.SalesItemLineDetail;
         public TaxLineDetail taxLineDetail = new();
+        public ReferenceType CustomerRef = new();
         public ReferenceType referenceType = new();
         public PhysicalAddress BillAddr;
         public PhysicalAddress ShipAddr;

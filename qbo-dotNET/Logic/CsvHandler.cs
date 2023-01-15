@@ -17,12 +17,6 @@ namespace qbo_dotNET.Logic
 
         public CsvHandler(IApiHandler api) { _api = api; finalInvoiceList = new(); }
 
-        public void test(object obj)
-        {
-            var jsonString = JsonConvert.SerializeObject(obj, Formatting.Indented, new JsonConverter[] { new StringEnumConverter() });
-            Console.WriteLine(jsonString);
-        }
-
         public async System.Threading.Tasks.Task formatData()
         {
             Stopwatch watch = new();
@@ -81,23 +75,18 @@ namespace qbo_dotNET.Logic
 
                     invoice.CustomerRef = new ReferenceType { Value = customer.Id, name = customer.DisplayName };
                     invoice.Line = lines.ToArray<Line>();
-
-                    Console.WriteLine(invoice.Line[0].Amount);
                     finalInvoiceList.Add(invoice);
                 }
-
                 Console.WriteLine("Done sorting items and lines");
                 watch.Stop();
-
                 TimeSpan ts = watch.Elapsed;
                 string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                     ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
+
                 Console.WriteLine("sorted in: " + elapsedTime);
             }
         }
-
-
 
         public async Task<Item> validateItem(CsvRow row)
         {
@@ -128,7 +117,7 @@ namespace qbo_dotNET.Logic
             }
             else
             {
-                Console.WriteLine("Bong");
+                Console.WriteLine("Not found, " + row.Customer);
                 item = new();
                 item.sparse = true;
                 item.TypeSpecified = true;
@@ -140,7 +129,7 @@ namespace qbo_dotNET.Logic
                 item = _api.updateItem(item).Result;
                 //Task<Item> returnedItemResult = _api.updateItem(item);
                 //item = await returnedItemResult;
-                _api.getWorkingLists();
+                _api.updateItemDictionary();
             }
             return item;
         }
@@ -148,12 +137,11 @@ namespace qbo_dotNET.Logic
         public async System.Threading.Tasks.Task<Customer> validateCustomer(CsvRow row)
         {
             Customer customer = new();
-
             if (_api.customerDictionary.TryGetValue(row.Customer, out customer))
             {
                 bool updated = false;
-
                 Console.WriteLine("Found customer, " + customer.DisplayName);
+
                 if (customer.BillAddr != row.BillAddr || customer.ShipAddr != row.ShipAddr)
                 {
                     customer.BillAddr = row.BillAddr;
@@ -173,6 +161,7 @@ namespace qbo_dotNET.Logic
                     _api.updateCustomerDictionary();
 
                 }
+                return customer;
             }
             else
             {
@@ -184,13 +173,9 @@ namespace qbo_dotNET.Logic
                 Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                 customer = await returnedCustomerResult;
                 _api.updateCustomerDictionary();
-
+                return customer;
             }
-            //_api.updateCustomerDictionary();
-            return customer;
         }
-
-
     }
 
 }

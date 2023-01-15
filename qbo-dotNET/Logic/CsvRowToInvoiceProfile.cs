@@ -14,7 +14,8 @@ namespace qbo_dotNET.Logic
                 .ForMember(dest => dest.BillEmail, opt => opt.MapFrom(src => src.BillEmail))
                 .ForMember(dest => dest.ShipAddr, opt => opt.MapFrom(src => src.ShipAddr))
                 .ForMember(dest => dest.AllowOnlineACHPayment, opt => opt.MapFrom(src => src.AllowOnlineACHPayment))
-                .ForMember(dest => dest.BillAddr, opt => opt.MapFrom(src => src.BillAddr));
+                .ForMember(dest => dest.BillAddr, opt => opt.MapFrom(src => src.BillAddr))
+                .ForMember(dest => dest.CustomerRef, opt => opt.MapFrom(src => src.CustomerRef));
         }
     }
 }

@@ -22,8 +22,8 @@ namespace qbo_dotNET.Logic
         public OAuth2Client auth2Client { get; set; }
         public ServiceContext serviceContext { get; set; }
         public DataService service { get; set; }
-        public Dictionary<string, Item>? itemDictionary { get; set; }
-        public Dictionary<string, Customer>? customerDictionary { get; set; }
+        public Dictionary<string, Item> itemDictionary { get; set; }
+        public Dictionary<string, Customer> customerDictionary { get; set; }
 
         public ApiHandler()
         {
@@ -68,15 +68,11 @@ namespace qbo_dotNET.Logic
 
         public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList)
         {
-
-            try
+            foreach (Invoice invoice in finalInvoiceList)
             {
-                foreach (Invoice invoice in finalInvoiceList)
-                {
-                    service.Add<Invoice>(invoice);
-                    Console.WriteLine("Invoice added: " + invoice.CustomerRef.name);
-                }
-            } catch (Intuit.Ipp.Exception.IdsException ex) { Console.WriteLine(ex.Message + "\n" + ex.Data + "\n" + ex.StackTrace); }
+                service.Add<Invoice>(invoice);
+                Console.WriteLine("Invoice added: " + invoice.CustomerRef.name);
+            }
         }
 
         public async System.Threading.Tasks.Task updateCustomerDictionary() => customerDictionary = customerDictionary = service.FindAll(new Customer()).ToList().ToDictionary(c => c.DisplayName, c => c) ?? new Dictionary<string, Customer>();

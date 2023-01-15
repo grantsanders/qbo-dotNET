@@ -10,10 +10,9 @@ namespace qbo_dotNET.Logic
         public string code { get; set; }
         public string realmId { get; set; }
         public string? InitiateOAuth2() { return authorizeUrl; }
-        public Dictionary<string, Item>? itemDictionary { get; set; }
-        public Dictionary<string, Customer>? customerDictionary { get; set; }
+        public Dictionary<string, Item> itemDictionary { get; set; }
+        public Dictionary<string, Customer> customerDictionary { get; set; }
         public OAuth2Client auth2Client { get; set; }
-
 
         public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList) { }
 
@@ -22,7 +21,7 @@ namespace qbo_dotNET.Logic
         public async System.Threading.Tasks.Task test() { }
 
         public async System.Threading.Tasks.Task<Item> updateItem(Item item) { return item; }
-       
+
         public async System.Threading.Tasks.Task<Customer> updateCustomer(Customer customer) { return customer; }
 
         public async System.Threading.Tasks.Task getWorkingLists() { }

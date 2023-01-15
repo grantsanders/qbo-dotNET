@@ -31,9 +31,6 @@
         </div>
     }
 
-    @*{<textarea style="width: 100%; max-height: 300px; height: 300px;">@fileContent</textarea>}*@
-
-
 </body>
 
 @code {
@@ -61,20 +58,17 @@
 
     public void nullify()
     {
-
         fileContent = null;
     }
 
     async System.Threading.Tasks.Task post()
     {
         apiHandler.postInvoices(csvHandler.finalInvoiceList);
-        Console.WriteLine("Done?");
-        
+        Console.WriteLine("Done posting invoices");
     }
 
     async System.Threading.Tasks.Task FilesReadyForContent(IMatFileUploadEntry[] files)
     {
-
         try
         {
             var file = files.FirstOrDefault();
@@ -82,7 +76,6 @@
             {
                 return;
             }
-
             using (var stream = new MemoryStream())
             {
                 var sw = Stopwatch.StartNew();
@@ -106,12 +99,11 @@
                         fileContent = await reader.ReadToEndAsync();
                         csvHandler.rawData = fileContent;
                         Console.WriteLine("Data Stored");
-                        csvHandler.formatData();
+                        await csvHandler.formatData();
                     }
                 }
             }
         }
-
         catch (Exception e)
         {
             fileContent = $"Error:\r\n{e.Message}\r\n{e.StackTrace}";
