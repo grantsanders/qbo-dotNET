@@ -26,7 +26,7 @@ namespace qbo_dotNET.Logic
 
         public async System.Threading.Tasks.Task getServiceContext() { }
 
-        public async System.Threading.Tasks.Task test() { }
+        public async System.Threading.Tasks.Task getCredentials() { }
 
         public async System.Threading.Tasks.Task<Item> updateItem(Item item) { return item; }
 

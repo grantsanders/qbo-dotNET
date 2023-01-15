@@ -48,6 +48,17 @@ namespace qbo_dotNET.Logic
             return authorizeUrl;
         }
 
+        public async System.Threading.Tasks.Task getCredentials()
+        {
+            var vaultUri = "https://granthum-vault.vault.azure.net/";
+            var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
+            var id = await client.GetSecretAsync("boldbean-dotNET-clientID");
+            var secret = await client.GetSecretAsync("boldbean-dotNET-clientSecret");
+
+            clientId = id.ToString();
+            clientSecret = secret.ToString();
+
+        }
 
         public async System.Threading.Tasks.Task getServiceContext()
         {

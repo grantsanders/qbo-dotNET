@@ -19,6 +19,8 @@
 
     public void authRedirect()
     {
+        apiHandler.getCredentials();
+
         navigationManager.NavigateTo(apiHandler.InitiateOAuth2());
     }
 
