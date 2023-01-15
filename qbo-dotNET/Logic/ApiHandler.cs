@@ -27,7 +27,7 @@ namespace qbo_dotNET.Logic
 
         public ApiHandler()
         {
-            auth2Client = new OAuth2Client("ABgmNW1YLLBP9g4fl46KoKYCF5lumKaKR6vxkSdb7eycxwwvPy", "WzqNy1Mf8rb6hpsqQCVxmU2JijqAEnVWv1jgFhy3", "https://boldbean-dotnet.azurewebsites.net/oauth2redirect", "sandbox");
+            auth2Client = new OAuth2Client("ABgmNW1YLLBP9g4fl46KoKYCF5lumKaKR6vxkSdb7eycxwwvPy", "WzqNy1Mf8rb6hpsqQCVxmU2JijqAEnVWv1jgFhy3", "boldbean-dotnet.azurewebsites.net/oauth2redirect", "sandbox");
         }
 
         public string? InitiateOAuth2()
