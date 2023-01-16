@@ -37,7 +37,7 @@ namespace qbo_dotNET.Logic
             var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
             clientId = client.GetSecret("boldbean-dotNET-clientID").Value.Value.ToString();
             clientSecret = client.GetSecret("boldbean-dotNET-clientSecret").Value.Value.ToString();
-            auth2Client = new OAuth2Client(clientId, clientSecret, "boldbean-dotnet.azurewebsites.net/oauth2redirect", "production");
+            auth2Client = new OAuth2Client(clientId, clientSecret, "https://boldbean-dotnet.azurewebsites.net/oauth2redirect", "production");
         }
 
         public string? InitiateOAuth2()
