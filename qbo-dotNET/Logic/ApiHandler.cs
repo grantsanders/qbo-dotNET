@@ -35,8 +35,8 @@ namespace qbo_dotNET.Logic
         {
             var vaultUri = "https://granthum-vault.vault.azure.net/";
             var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
-            clientId = client.GetSecret("boldbean-dotNET-clientID").Value.ToString();
-            clientSecret = client.GetSecret("boldbean-dotNET-clientSecret").Value.ToString();
+            clientId = client.GetSecret("boldbean-dotNET-clientID").GetRawResponse().Content.ToString();
+            clientSecret = client.GetSecret("boldbean-dotNET-clientSecret").GetRawResponse().Content.ToString();
             auth2Client = new OAuth2Client(clientId, clientSecret, "boldbean-dotnet.azurewebsites.net/oauth2redirect", "production");
         }
 
@@ -46,18 +46,6 @@ namespace qbo_dotNET.Logic
             scopes.Add(OidcScopes.Accounting);
             authorizeUrl = auth2Client.GetAuthorizationURL(scopes);
             return authorizeUrl;
-        }
-
-        public async System.Threading.Tasks.Task getCredentials()
-        {
-            var vaultUri = "https://granthum-vault.vault.azure.net/";
-            var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
-            var id = await client.GetSecretAsync("boldbean-dotNET-clientID");
-            var secret = await client.GetSecretAsync("boldbean-dotNET-clientSecret");
-
-            clientId = id.ToString();
-            clientSecret = secret.ToString();
-
         }
 
         public async System.Threading.Tasks.Task getServiceContext()
