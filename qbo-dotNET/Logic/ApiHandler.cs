@@ -35,11 +35,8 @@ namespace qbo_dotNET.Logic
         {
             var vaultUri = "https://granthum-vault.vault.azure.net/";
             var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
-<<<<<<< HEAD
-=======
             clientId = client.GetSecret("boldbean-dotNET-clientID").Value.Value.ToString();
             clientSecret = client.GetSecret("boldbean-dotNET-clientSecret").Value.Value.ToString();
->>>>>>> really fixed azure keyvault setup
             auth2Client = new OAuth2Client(clientId, clientSecret, "boldbean-dotnet.azurewebsites.net/oauth2redirect", "production");
         }
 
