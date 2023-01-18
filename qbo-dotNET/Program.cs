@@ -2,6 +2,8 @@
 using System.Configuration;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Configuration;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,6 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services.AddScoped<IApiHandler, ApiHandler>();
 builder.Services.AddScoped<ICsvHandler, CsvHandler>();
-
 
 var app = builder.Build();
 

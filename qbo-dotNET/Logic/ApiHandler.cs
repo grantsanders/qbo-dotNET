@@ -29,15 +29,16 @@ namespace qbo_dotNET.Logic
         public Dictionary<string, Item> itemDictionary { get; set; }
         public Dictionary<string, Customer> customerDictionary { get; set; }
 
+        public ILogger _logger;
 
-
-        public ApiHandler()
+        public ApiHandler(ILogger logger)
         {
             var vaultUri = "https://granthum-vault.vault.azure.net/";
             var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
             clientId = client.GetSecret("boldbean-dotNET-clientID").Value.Value.ToString();
             clientSecret = client.GetSecret("boldbean-dotNET-clientSecret").Value.Value.ToString();
             auth2Client = new OAuth2Client(clientId, clientSecret, "https://boldbean-dotnet.azurewebsites.net/oauth2redirect", "production");
+            _logger = logger;
         }
 
         public string? InitiateOAuth2()

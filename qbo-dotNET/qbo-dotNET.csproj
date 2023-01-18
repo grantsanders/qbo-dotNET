@@ -19,6 +19,7 @@
     <None Remove="AutoMapper" />
     <None Remove="Azure.Security.KeyVault.Secrets" />
     <None Remove="Azure.Identity" />
+    <None Remove="Serilog" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MatBlazor" Version="2.8.0" />
@@ -28,6 +29,7 @@
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.4.0" />
     <PackageReference Include="Azure.Identity" Version="1.8.1" />
+    <PackageReference Include="Serilog" Version="2.12.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logic\" />
