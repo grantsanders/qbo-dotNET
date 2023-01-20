@@ -53,7 +53,7 @@ namespace qbo_dotNET.Logic
             accessToken = tokenResponse.AccessToken;
             OAuth2RequestValidator oAuth2RequestValidator = new OAuth2RequestValidator(accessToken);
             serviceContext = new ServiceContext(realmId, IntuitServicesType.QBO, oAuth2RequestValidator);
-            serviceContext.IppConfiguration.BaseUrl.Qbo = "https://sandbox-quickbooks.api.intuit.com/";
+            serviceContext.IppConfiguration.BaseUrl.Qbo = "https://quickbooks.api.intuit.com/";
             serviceContext.IppConfiguration.MinorVersion.Qbo = "55";
             service = new DataService(serviceContext);
 
