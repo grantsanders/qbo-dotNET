@@ -32,12 +32,21 @@ namespace qbo_dotNET.Logic
 
         public ApiHandler(ILogger<ApiHandler> logger)
         {
+            _logger = logger;
+        }
+
+        public async System.Threading.Tasks.Task obtainAuthClient()
+        {
             var vaultUri = "https://granthum-vault.vault.azure.net/";
             var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
-            clientId = client.GetSecret("boldbean-dotNET-clientID").Value.Value.ToString();
-            clientSecret = client.GetSecret("boldbean-dotNET-clientSecret").Value.Value.ToString();
-            auth2Client = new OAuth2Client(clientId, clientSecret, "https://boldbean-dotnet.azurewebsites.net/oauth2redirect", "production");
-            _logger = logger;
+
+            KeyVaultSecret id = await client.GetSecretAsync("boldbean-dotNET-clientId");
+            clientId = id.Value.ToString();
+
+            KeyVaultSecret secret = await client.GetSecretAsync("boldbean-dotNET-clientSecret");
+            clientSecret = secret.Value.ToString();
+
+            auth2Client = new OAuth2Client(clientId, clientSecret, "https://boldbean-dotNET.azurewebsites.net", "production");
         }
 
         public string? InitiateOAuth2()
