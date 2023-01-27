@@ -1,6 +1,8 @@
 ﻿@page "/oauth2redirect"
 @inject ICsvHandler csvHandler
 @inject IApiHandler apiHandler
+@inject ILogger<OAuth2Redirect> logger
+@inject NavigationManager navigationManager
 
 @using Intuit.Ipp.Core
 @using Intuit.Ipp.Data
@@ -8,8 +10,6 @@
 @using System.Diagnostics
 @using System.Web
 @using Microsoft.AspNetCore.Components;
-@inject ILogger logger;
-@inject NavigationManager navigationManager
 
 
 <PageTitle>Invoicing</PageTitle>
