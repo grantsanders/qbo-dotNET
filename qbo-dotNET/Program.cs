@@ -12,6 +12,7 @@ builder.Services.AddScoped<ICsvHandler, CsvHandler>();
 
 builder.Services.AddLogging(loggingBuilder =>
 {
+
     loggingBuilder.AddConsole();
 });
 
