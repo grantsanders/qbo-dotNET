@@ -1,9 +1,4 @@
 ﻿global using qbo_dotNET.Logic;
-using System.Configuration;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.Configuration;
-using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +9,11 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services.AddScoped<IApiHandler, ApiHandler>();
 builder.Services.AddScoped<ICsvHandler, CsvHandler>();
+
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.AddConsole();
+});
 
 var app = builder.Build();
 
