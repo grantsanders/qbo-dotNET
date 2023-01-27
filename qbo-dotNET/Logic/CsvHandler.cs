@@ -125,7 +125,7 @@ namespace qbo_dotNET.Logic
                 item.TypeSpecified = true;
                 item.Name = row.LineDesc;
                 item.Type = ItemTypeEnum.NonInventory;
-                item.IncomeAccountRef = new ReferenceType() { Value = "85" };
+                item.IncomeAccountRef = new ReferenceType() { Value = "1" };
                 item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
 
                 item = _api.updateItem(item).Result;
