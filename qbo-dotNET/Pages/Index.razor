@@ -17,9 +17,18 @@
 
 @code {
 
+
+    protected override async System.Threading.Tasks.Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            apiHandler.obtainAuthClient();
+        }
+    }
+
     public void authRedirect()
     {
         navigationManager.NavigateTo(apiHandler.InitiateOAuth2());
     }
 
-}
+    }

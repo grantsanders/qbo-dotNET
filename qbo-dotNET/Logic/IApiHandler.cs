@@ -22,6 +22,8 @@ namespace qbo_dotNET.Logic
 
         public string? InitiateOAuth2() { return authorizeUrl; }
 
+        public async System.Threading.Tasks.Task obtainAuthClient() { }
+
         public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList) { }
 
         public async System.Threading.Tasks.Task getServiceContext() { }
