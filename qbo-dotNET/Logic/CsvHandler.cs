@@ -75,14 +75,14 @@ namespace qbo_dotNET.Logic
                     invoice.Line = lines.ToArray<Line>();
                     finalInvoiceList.Add(invoice);
                 }
-                _logger.LogInformation("Done sorting items and lines");
+                _logger.LogWarning("Done sorting items and lines");
                 watch.Stop();
                 TimeSpan ts = watch.Elapsed;
                 string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                     ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
 
-                _logger.LogInformation("sorted in: " + elapsedTime);
+                _logger.LogWarning("sorted in: " + elapsedTime);
             }
         }
 
@@ -94,7 +94,7 @@ namespace qbo_dotNET.Logic
             {
                 bool updated = false;
 
-                _logger.LogInformation("Found, " + item.Name);
+                _logger.LogWarning("Found, " + item.Name);
                 if (!item.Active)
                 {
                     item.Active = true;
@@ -115,7 +115,7 @@ namespace qbo_dotNET.Logic
             }
             else
             {
-                _logger.LogInformation("Not found, " + row.Customer);
+                _logger.LogWarning("Not found, " + row.Customer);
                 item = new();
                 item.sparse = true;
                 item.TypeSpecified = true;
@@ -138,7 +138,7 @@ namespace qbo_dotNET.Logic
             if (_api.customerDictionary.TryGetValue(row.Customer, out customer))
             {
                 bool updated = false;
-                _logger.LogInformation("Found customer, " + customer.DisplayName);
+                _logger.LogWarning("Found customer, " + customer.DisplayName);
 
                 if (customer.BillAddr != row.BillAddr || customer.ShipAddr != row.ShipAddr)
                 {
@@ -164,7 +164,7 @@ namespace qbo_dotNET.Logic
             else
             {
                 customer = new();
-                _logger.LogInformation("Not found, " + row.Customer);
+                _logger.LogWarning("Not found, " + row.Customer);
                 customer.DisplayName = row.Customer;
                 customer.BillAddr = row.BillAddr;
                 customer.ShipAddr = row.ShipAddr;

@@ -1,8 +1,14 @@
-﻿using Intuit.Ipp.Data;
+﻿using System;
+using System.Security.Claims;
+using Intuit.Ipp.Data;
 using Intuit.Ipp.Core;
 using Intuit.Ipp.OAuth2PlatformClient;
 using Intuit.Ipp.Security;
+using Microsoft.AspNetCore.Components;
+using static System.Formats.Asn1.AsnWriter;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using Intuit.Ipp.DataService;
+using Microsoft.AspNetCore.SignalR.Protocol;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 
@@ -26,29 +32,18 @@ namespace qbo_dotNET.Logic
 
         public ApiHandler(ILogger<ApiHandler> logger)
         {
-            _logger = logger;
-        }
-
-        public async System.Threading.Tasks.Task obtainAuthClient()
-        {
             var vaultUri = "https://granthum-vault.vault.azure.net/";
             var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
-
-            KeyVaultSecret id = await client.GetSecretAsync("boldbean-dotNET-clientId");
-            clientId = id.Value.ToString();
-
-            KeyVaultSecret secret = await client.GetSecretAsync("boldbean-dotNET-clientSecret");
-            clientSecret = secret.Value.ToString();
-
+            clientId = client.GetSecret("boldbean-dotNET-clientID").Value.Value.ToString();
+            clientSecret = client.GetSecret("boldbean-dotNET-clientSecret").Value.Value.ToString();
             auth2Client = new OAuth2Client(clientId, clientSecret, "https://boldbean-dotnet.azurewebsites.net/oauth2redirect", "production");
+            _logger = logger;
         }
 
         public string? InitiateOAuth2()
         {
-            List<OidcScopes> scopes = new List<OidcScopes>
-            {
-                OidcScopes.Accounting
-            };
+            List<OidcScopes> scopes = new List<OidcScopes>();
+            scopes.Add(OidcScopes.Accounting);
             authorizeUrl = auth2Client.GetAuthorizationURL(scopes);
             return authorizeUrl;
         }
@@ -86,7 +81,7 @@ namespace qbo_dotNET.Logic
             foreach (Invoice invoice in finalInvoiceList)
             {
                 service.Add<Invoice>(invoice);
-                _logger.LogInformation("Invoice added: " + invoice.CustomerRef.name);
+                _logger.LogWarning("Invoice added: " + invoice.CustomerRef.name);
             }
         }
 

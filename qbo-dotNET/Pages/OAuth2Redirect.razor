@@ -16,10 +16,10 @@
 
 <body class="invoicing">
 
-    <h4>Select a CSV:</h4>
 
     @if (fileContent == null)
     {
+        <h4>Select a CSV:</h4>
         <MatFileUpload OnChange="@FilesReadyForContent" Label="Drop a single file here or Browse" Style="background-color:#292a2b; border-bottom-color: #202021; "></MatFileUpload>
     }
     else
@@ -51,7 +51,7 @@
 
             apiHandler.getServiceContext();
 
-            logger.LogInformation("Service Context Retrieved");
+            logger.LogWarning("Service Context Retrieved");
         }
     }
 
@@ -64,7 +64,7 @@
     async System.Threading.Tasks.Task post()
     {
         apiHandler.postInvoices(csvHandler.finalInvoiceList);
-        logger.LogInformation("Done posting invoices");
+        logger.LogWarning("Done posting invoices");
     }
 
     async System.Threading.Tasks.Task FilesReadyForContent(IMatFileUploadEntry[] files)
@@ -98,7 +98,7 @@
                     {
                         fileContent = await reader.ReadToEndAsync();
                         csvHandler.rawData = fileContent;
-                        logger.LogInformation("Data Stored");
+                        logger.LogWarning("Data Stored");
                         await csvHandler.formatData();
                     }
                 }
