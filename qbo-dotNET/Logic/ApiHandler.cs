@@ -28,15 +28,16 @@ namespace qbo_dotNET.Logic
         public DataService service { get; set; }
         public Dictionary<string, Item> itemDictionary { get; set; }
         public Dictionary<string, Customer> customerDictionary { get; set; }
+        private readonly ILogger<ApiHandler> _logger;
 
-
-        public ApiHandler()
+        public ApiHandler(ILogger<ApiHandler> logger)
         {
             var vaultUri = "https://granthum-vault.vault.azure.net/";
             var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
             clientId = client.GetSecret("boldbean-dotNET-clientID").Value.Value.ToString();
             clientSecret = client.GetSecret("boldbean-dotNET-clientSecret").Value.Value.ToString();
             auth2Client = new OAuth2Client(clientId, clientSecret, "https://boldbean-dotnet.azurewebsites.net/oauth2redirect", "production");
+            _logger = logger;
         }
 
         public string? InitiateOAuth2()
@@ -60,7 +61,7 @@ namespace qbo_dotNET.Logic
 
             await getWorkingLists();
 
-            Console.WriteLine("Lists updated");
+            _logger.LogDebug("Working lists updated");
         }
 
         public async System.Threading.Tasks.Task getWorkingLists()
@@ -80,7 +81,7 @@ namespace qbo_dotNET.Logic
             foreach (Invoice invoice in finalInvoiceList)
             {
                 service.Add<Invoice>(invoice);
-                Console.WriteLine("Invoice added: " + invoice.CustomerRef.name);
+                _logger.LogDebug("Invoice added: " + invoice.CustomerRef.name);
             }
         }
 
