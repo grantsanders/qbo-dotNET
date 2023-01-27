@@ -39,19 +39,23 @@
     {
         if (firstRender)
         {
-            apiHandler.code = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
-                .Split('&')
-                .FirstOrDefault(s => s.StartsWith("code="))
-                ?.Split('=')[1];
 
-            apiHandler.realmId = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
-                .Split('&')
-                .FirstOrDefault(s => s.StartsWith("realmId="))
-                ?.Split('=')[1];
+            try
+            {
+                apiHandler.code = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
+                    .Split('&')
+                    .FirstOrDefault(s => s.StartsWith("code="))
+                    ?.Split('=')[1];
 
-            apiHandler.getServiceContext();
+                apiHandler.realmId = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
+                    .Split('&')
+                    .FirstOrDefault(s => s.StartsWith("realmId="))
+                    ?.Split('=')[1];
 
-            logger.LogWarning("Service Context Retrieved");
+                apiHandler.getServiceContext();
+
+                logger.LogWarning("Service Context Retrieved");
+            } catch (IndexOutOfRangeException ex) { logger.LogError(ex.Message + " " + ex.Source); }
         }
     }
 
@@ -111,9 +115,11 @@
         finally
         {
             csvHandler.rawData = fileContent;
+            logger.LogWarning("Data Stored");
+            await csvHandler.formatData();
             await InvokeAsync(StateHasChanged);
         }
     }
-}
+    }
 
 

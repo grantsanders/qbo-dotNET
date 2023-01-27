@@ -58,7 +58,6 @@ namespace qbo_dotNET.Logic
             serviceContext.IppConfiguration.MinorVersion.Qbo = "55";
             service = new DataService(serviceContext);
 
-
             await getWorkingLists();
 
             _logger.LogWarning("Working lists updated");
