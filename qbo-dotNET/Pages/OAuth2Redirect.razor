@@ -8,7 +8,7 @@
 @using System.Diagnostics
 @using System.Web
 @using Microsoft.AspNetCore.Components;
-
+@inject ILogger logger;
 @inject NavigationManager navigationManager
 
 
@@ -51,7 +51,7 @@
 
             apiHandler.getServiceContext();
 
-            Console.WriteLine("Service Context Retrieved");
+            logger.LogInformation("Service Context Retrieved");
         }
     }
 
@@ -64,7 +64,7 @@
     async System.Threading.Tasks.Task post()
     {
         apiHandler.postInvoices(csvHandler.finalInvoiceList);
-        Console.WriteLine("Done posting invoices");
+        logger.LogInformation("Done posting invoices");
     }
 
     async System.Threading.Tasks.Task FilesReadyForContent(IMatFileUploadEntry[] files)
@@ -98,7 +98,7 @@
                     {
                         fileContent = await reader.ReadToEndAsync();
                         csvHandler.rawData = fileContent;
-                        Console.WriteLine("Data Stored");
+                        logger.LogInformation("Data Stored");
                         await csvHandler.formatData();
                     }
                 }

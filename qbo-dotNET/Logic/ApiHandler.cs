@@ -61,7 +61,7 @@ namespace qbo_dotNET.Logic
 
             await getWorkingLists();
 
-            _logger.LogDebug("Working lists updated");
+            _logger.LogInformation("Working lists updated");
         }
 
         public async System.Threading.Tasks.Task getWorkingLists()
@@ -81,7 +81,7 @@ namespace qbo_dotNET.Logic
             foreach (Invoice invoice in finalInvoiceList)
             {
                 service.Add<Invoice>(invoice);
-                _logger.LogDebug("Invoice added: " + invoice.CustomerRef.name);
+                _logger.LogInformation("Invoice added: " + invoice.CustomerRef.name);
             }
         }
 

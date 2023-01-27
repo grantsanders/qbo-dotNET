@@ -14,8 +14,9 @@ namespace qbo_dotNET.Logic
         public string? rawData { get; set; }
         public List<Invoice> finalInvoiceList { get; set; }
         private readonly IApiHandler _api;
+        private ILogger<CsvHandler> _logger;
 
-        public CsvHandler(IApiHandler api) { _api = api; finalInvoiceList = new(); }
+        public CsvHandler(IApiHandler api, ILogger<CsvHandler> logger) { _api = api; finalInvoiceList = new(); _logger = logger; }
 
         public async System.Threading.Tasks.Task formatData()
         {
@@ -77,14 +78,14 @@ namespace qbo_dotNET.Logic
                     invoice.Line = lines.ToArray<Line>();
                     finalInvoiceList.Add(invoice);
                 }
-                Console.WriteLine("Done sorting items and lines");
+                _logger.LogInformation("Done sorting items and lines");
                 watch.Stop();
                 TimeSpan ts = watch.Elapsed;
                 string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                     ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
 
-                Console.WriteLine("sorted in: " + elapsedTime);
+                _logger.LogInformation("sorted in: " + elapsedTime);
             }
         }
 
@@ -96,7 +97,7 @@ namespace qbo_dotNET.Logic
             {
                 bool updated = false;
 
-                Console.WriteLine("Found, " + item.Name);
+                _logger.LogInformation("Found, " + item.Name);
                 if (!item.Active)
                 {
                     item.Active = true;
@@ -117,7 +118,7 @@ namespace qbo_dotNET.Logic
             }
             else
             {
-                Console.WriteLine("Not found, " + row.Customer);
+                _logger.LogInformation("Not found, " + row.Customer);
                 item = new();
                 item.sparse = true;
                 item.TypeSpecified = true;
@@ -140,7 +141,7 @@ namespace qbo_dotNET.Logic
             if (_api.customerDictionary.TryGetValue(row.Customer, out customer))
             {
                 bool updated = false;
-                Console.WriteLine("Found customer, " + customer.DisplayName);
+                _logger.LogInformation("Found customer, " + customer.DisplayName);
 
                 if (customer.BillAddr != row.BillAddr || customer.ShipAddr != row.ShipAddr)
                 {
@@ -166,7 +167,7 @@ namespace qbo_dotNET.Logic
             else
             {
                 customer = new();
-                Console.WriteLine("Not found, " + row.Customer);
+                _logger.LogInformation("Not found, " + row.Customer);
                 customer.DisplayName = row.Customer;
                 customer.BillAddr = row.BillAddr;
                 customer.ShipAddr = row.ShipAddr;
