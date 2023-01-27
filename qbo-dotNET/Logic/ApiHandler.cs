@@ -46,7 +46,7 @@ namespace qbo_dotNET.Logic
             KeyVaultSecret secret = await client.GetSecretAsync("boldbean-dotNET-clientSecret");
             clientSecret = secret.Value.ToString();
 
-            auth2Client = new OAuth2Client(clientId, clientSecret, "https://boldbean-dotNET.azurewebsites.net", "production");
+            auth2Client = new OAuth2Client(clientId, clientSecret, "https://boldbean-dotnet.azurewebsites.net/oauth2redirect", "production");
         }
 
         public string? InitiateOAuth2()
