@@ -17,6 +17,10 @@ namespace qbo_dotNET.Logic
 
         public async System.Threading.Tasks.Task formatData()
         {
+
+            _logger.LogWarning("Beginning to format data");
+            _logger.LogWarning(rawData);
+
             Stopwatch watch = new();
             watch.Start();
 
