@@ -68,11 +68,14 @@ namespace qbo_dotNET.Logic
             Customer c = new();
             Item i = new();
 
-            IEnumerable<Customer> customerList = service.FindAll(c).ToList();
-            IEnumerable<Item> itemList = service.FindAll(i).ToList();
+            try
+            {
+                IEnumerable<Customer> customerList = service.FindAll(c).ToList();
+                IEnumerable<Item> itemList = service.FindAll(i).ToList();
 
-            customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c);
-            itemDictionary = itemList.ToDictionary(i => i.Name, i => i);
+                customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c);
+                itemDictionary = itemList.ToDictionary(i => i.Name, i => i);
+            } catch (Exception ex) { _logger.LogError(ex.Data + " " + ex.Message); }
         }
 
         public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList)
