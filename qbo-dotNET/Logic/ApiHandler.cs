@@ -1,14 +1,8 @@
-﻿using System;
-using System.Security.Claims;
-using Intuit.Ipp.Data;
+﻿using Intuit.Ipp.Data;
 using Intuit.Ipp.Core;
 using Intuit.Ipp.OAuth2PlatformClient;
 using Intuit.Ipp.Security;
-using Microsoft.AspNetCore.Components;
-using static System.Formats.Asn1.AsnWriter;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Intuit.Ipp.DataService;
-using Microsoft.AspNetCore.SignalR.Protocol;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 
@@ -51,8 +45,10 @@ namespace qbo_dotNET.Logic
 
         public string? InitiateOAuth2()
         {
-            List<OidcScopes> scopes = new List<OidcScopes>();
-            scopes.Add(OidcScopes.Accounting);
+            List<OidcScopes> scopes = new List<OidcScopes>
+            {
+                OidcScopes.Accounting
+            };
             authorizeUrl = auth2Client.GetAuthorizationURL(scopes);
             return authorizeUrl;
         }

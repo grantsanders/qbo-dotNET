@@ -12,9 +12,9 @@ builder.Services.AddScoped<ICsvHandler, CsvHandler>();
 
 builder.Services.AddLogging(loggingBuilder =>
 {
-
     loggingBuilder.AddConsole();
 });
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 var app = builder.Build();
 

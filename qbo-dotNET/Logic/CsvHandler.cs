@@ -1,11 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using AutoMapper;
 using CsvHelper;
 using Intuit.Ipp.Data;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace qbo_dotNET.Logic
 {
