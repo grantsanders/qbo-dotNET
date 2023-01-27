@@ -66,7 +66,7 @@ namespace qbo_dotNET.Logic
 
             await getWorkingLists();
 
-            _logger.LogInformation("Working lists updated");
+            _logger.LogWarning("Working lists updated");
         }
 
         public async System.Threading.Tasks.Task getWorkingLists()
