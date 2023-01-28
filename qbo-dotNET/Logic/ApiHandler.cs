@@ -77,11 +77,13 @@ namespace qbo_dotNET.Logic
                 {
                     if(item.Type == ItemTypeEnum.Service)
                     {
-                        service.Delete(item);
+                        item.Active = false;
+                        item.ActiveSpecified = true;
+                        item.Name += " old";
+                        updateItem(item);
                     }
                 }
-                itemList = null;
-                itemList = service.FindAll(i).ToList();
+
                 customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c);
                 itemDictionary = itemList.ToDictionary(i => i.Name, i => i);
 
