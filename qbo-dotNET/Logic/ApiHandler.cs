@@ -73,8 +73,19 @@ namespace qbo_dotNET.Logic
                 IEnumerable<Customer> customerList = service.FindAll(c).ToList();
                 IEnumerable<Item> itemList = service.FindAll(i).ToList();
 
+                foreach (Item item in itemList)
+                {
+                    if(item.Type == ItemTypeEnum.Service)
+                    {
+                        item.Active = false;
+                        item.ActiveSpecified = true;
+                    }
+                    updateItem(item);
+                }
+
                 customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c);
                 itemDictionary = itemList.ToDictionary(i => i.Name, i => i);
+
             } catch (Exception ex) { _logger.LogError(ex.Data + " " + ex.Message); }
         }
 
