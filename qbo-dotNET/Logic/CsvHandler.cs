@@ -74,7 +74,8 @@ namespace qbo_dotNET.Logic
                         discountLine.AnyIntuitObject = discountLineDetail;
                         lines.Add(discountLine);
                     }
-
+                    invoice.BillAddr = customer.BillAddr;
+                    invoice.ShipAddr = customer.ShipAddr;
                     invoice.CustomerRef = new ReferenceType { Value = customer.Id, name = customer.DisplayName };
                     invoice.Line = lines.ToArray<Line>();
                     finalInvoiceList.Add(invoice);
@@ -174,6 +175,7 @@ namespace qbo_dotNET.Logic
                 customer.ShipAddr = row.ShipAddr;
                 Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                 customer = await returnedCustomerResult;
+                _api.customerDictionary.Add(customer.DisplayName, customer);
                 _api.updateCustomerDictionary();
                 return customer;
             }
