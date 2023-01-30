@@ -79,8 +79,9 @@
 
     async System.Threading.Tasks.Task post()
     {
-        apiHandler.postInvoices(csvHandler.finalInvoiceList);
+        await apiHandler.postInvoices(csvHandler.finalInvoiceList);
         logger.LogWarning("Done posting invoices");
+        invoicesPosted = true;
     }
 
     async System.Threading.Tasks.Task FilesReadyForContent(IMatFileUploadEntry[] files)
