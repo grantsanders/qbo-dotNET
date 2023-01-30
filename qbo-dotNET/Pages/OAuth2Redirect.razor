@@ -75,6 +75,8 @@
     public void nullify()
     {
         fileContent = null;
+        csvHandler.finalInvoiceList.Clear();
+        invoicesPosted = false;
     }
 
     async System.Threading.Tasks.Task post()
