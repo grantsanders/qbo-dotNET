@@ -156,15 +156,12 @@ namespace qbo_dotNET.Logic
                     customer.Active = true;
                     updated = true;
                 }
-
                 if (updated == true)
                 {
                     Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                     customer = await returnedCustomerResult;
                     _api.updateCustomerDictionary();
-
                 }
-                return customer;
             }
             else
             {
@@ -177,8 +174,8 @@ namespace qbo_dotNET.Logic
                 customer = await returnedCustomerResult;
                 _api.customerDictionary.Add(customer.DisplayName, customer);
                 _api.updateCustomerDictionary();
-                return customer;
             }
+            return customer;
         }
     }
 

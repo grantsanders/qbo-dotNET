@@ -75,7 +75,7 @@ namespace qbo_dotNET.Logic
 
                 foreach (Item item in itemList)
                 {
-                    if(item.Type == ItemTypeEnum.Service)
+                    if (item.Type == ItemTypeEnum.Service)
                     {
                         item.Active = false;
                         item.ActiveSpecified = true;
@@ -87,7 +87,8 @@ namespace qbo_dotNET.Logic
                 customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c);
                 itemDictionary = itemList.ToDictionary(i => i.Name, i => i);
 
-            } catch (Exception ex) { _logger.LogError(ex.Data + " " + ex.Message); }
+            }
+            catch (Exception ex) { _logger.LogError(ex.Data + " " + ex.Message); }
         }
 
         public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList)
