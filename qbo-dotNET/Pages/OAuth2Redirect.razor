@@ -24,9 +24,19 @@
     }
     else
     {
+        <h4>File Processed</h4>
         <div class="buttons">
-            <MatButton OnClick="@post">Upload</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
+            <MatButton OnClick="@post">Post to Quickbooks</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
         </div>
+
+        if (invoicesPosted == true)
+        {
+            <h4>Invoices posted for:</h4>
+            foreach (Invoice invoice in csvHandler.finalInvoiceList)
+            {
+                <h4>@invoice.CustomerRef.name</h4>
+            }
+        }
     }
 
 </body>
@@ -34,6 +44,7 @@
 @code {
 
     string? fileContent;
+    bool? invoicesPosted;
 
     protected override async System.Threading.Tasks.Task OnAfterRenderAsync(bool firstRender)
     {
