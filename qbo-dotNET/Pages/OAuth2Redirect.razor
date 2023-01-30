@@ -79,7 +79,7 @@
 
     async System.Threading.Tasks.Task post()
     {
-        await apiHandler.postInvoices(csvHandler.finalInvoiceList);
+        apiHandler.postInvoices(csvHandler.finalInvoiceList);
         logger.LogWarning("Done posting invoices");
         invoicesPosted = true;
     }

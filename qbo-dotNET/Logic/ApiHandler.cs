@@ -94,7 +94,7 @@ namespace qbo_dotNET.Logic
         {
             foreach (Invoice invoice in finalInvoiceList)
             {
-                service.Add<Invoice>(invoice);
+                service.AddAsync<Invoice>(invoice);
                 _logger.LogWarning("Invoice added: " + invoice.CustomerRef.name);
             }
         }
