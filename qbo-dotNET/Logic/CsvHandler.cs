@@ -99,7 +99,7 @@ namespace qbo_dotNET.Logic
             {
                 bool updated = false;
 
-                _logger.LogWarning("Found, " + item.Name);
+                //_logger.LogWarning("Found, " + item.Name);
                 if (!item.Active)
                 {
                     item.Active = true;
@@ -132,7 +132,7 @@ namespace qbo_dotNET.Logic
                 item = _api.updateItem(item).Result;
                 //Task<Item> returnedItemResult = _api.updateItem(item);
                 //item = await returnedItemResult;
-                _api.updateItemDictionary();
+                await _api.updateItemDictionary();
             }
             return item;
         }
@@ -160,7 +160,7 @@ namespace qbo_dotNET.Logic
                 {
                     Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                     customer = await returnedCustomerResult;
-                    _api.updateCustomerDictionary();
+                    //_api.updateCustomerDictionary();
                 }
             }
             else
@@ -173,7 +173,7 @@ namespace qbo_dotNET.Logic
                 Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                 customer = await returnedCustomerResult;
                 _api.customerDictionary.Add(customer.DisplayName, customer);
-                _api.updateCustomerDictionary();
+                //_api.updateCustomerDictionary();
             }
             return customer;
         }
