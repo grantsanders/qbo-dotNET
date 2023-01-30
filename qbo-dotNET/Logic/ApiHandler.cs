@@ -84,8 +84,8 @@ namespace qbo_dotNET.Logic
                     }
                 }
 
-                customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c);
-                itemDictionary = itemList.ToDictionary(i => i.Name, i => i);
+                customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c, StringComparer.OrdinalIgnoreCase);
+                itemDictionary = itemList.ToDictionary(i => i.Name, i => i, StringComparer.OrdinalIgnoreCase);
 
             }
             catch (Exception ex) { _logger.LogError(ex.Data + " " + ex.Message); }
