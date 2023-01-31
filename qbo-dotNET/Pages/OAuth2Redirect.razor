@@ -26,17 +26,13 @@
     {
         <h4>File Processed</h4>
         <div class="buttons">
-            <MatButton OnClick="@post">Post to Quickbooks</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
+            <MatButton Disabled="@disableButton" OnClick="@post">Post to Quickbooks</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
         </div>
-
-        if (invoicesPosted == true)
-        {
-            <h4>Invoices posted for:</h4>
+            <h4>Invoices Sorted for:</h4>
             foreach (Invoice invoice in csvHandler.finalInvoiceList)
             {
                 <h4>@invoice.CustomerRef.name</h4>
             }
-        }
     }
 
 </body>
@@ -45,6 +41,7 @@
 
     string? fileContent;
     bool? invoicesPosted;
+    bool disableButton = true;
 
     protected override async System.Threading.Tasks.Task OnAfterRenderAsync(bool firstRender)
     {
@@ -130,6 +127,7 @@
         finally
         {
             await InvokeAsync(StateHasChanged);
+            disableButton = false;
         }
     }
 }
