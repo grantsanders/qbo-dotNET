@@ -52,6 +52,7 @@ namespace qbo_dotNET.Logic
                             invoice = invoiceMapper.Map<Invoice>(row);
                             Line line = lineMapper.Map<Line>(row);
 
+                            
                             Item item = validateItem(row).Result;
 
                             SalesItemLineDetail salesItemLineDetail = new() { Qty = (decimal.Parse(row.LineQty)), QtySpecified = true };
@@ -96,50 +97,55 @@ namespace qbo_dotNET.Logic
 
         public async Task<Item> validateItem(CsvRow row)
         {
-            Item item = new();
-
-            if (_api.itemDictionary.TryGetValue(row.LineDesc, out item))
+            try
             {
-                bool updated = false;
+                Item item = new();
 
-                //_logger.LogWarning("Found, " + item.Name);
-                if (!item.Active)
+                if (_api.itemDictionary.TryGetValue(row.LineDesc, out item))
                 {
-                    item.Active = true;
+                    bool updated = false;
+
+                    //_logger.LogWarning("Found, " + item.Name);
+                    if (!item.Active)
+                    {
+                        item.Active = true;
+                        item.sparse = true;
+                        updated = true;
+                    }
+                    if (item.UnitPrice != (decimal.Parse(row.LineUnitPrice)))
+                    {
+                        item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
+                        updated = true;
+                    }
+
+                    if (updated == true)
+                    {
+                        Task<Item> returnedItemResult = _api.updateItem(item);
+                        item = await returnedItemResult;
+                        await _api.updateItemDictionary();
+                    }
+                }
+                else
+                {
+                    _logger.LogWarning("Not found, " + row.Customer);
+                    item = new();
                     item.sparse = true;
-                    updated = true;
-                }
-                if (item.UnitPrice != (decimal.Parse(row.LineUnitPrice)))
-                {
+                    item.TypeSpecified = true;
+                    item.Name = row.LineDesc;
+                    item.Type = ItemTypeEnum.NonInventory;
+                    item.IncomeAccountRef = new ReferenceType() { Value = "1" };
                     item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
-                    updated = true;
-                }
 
-                if (updated == true)
-                {
-                    Task<Item> returnedItemResult = _api.updateItem(item);
-                    item = await returnedItemResult;
+                    item = _api.updateItem(item).Result;
+                    //Task<Item> returnedItemResult = _api.updateItem(item);
+                    //item = await returnedItemResult;
                     await _api.updateItemDictionary();
                 }
-            }
-            else
-            {
-                _logger.LogWarning("Not found, " + row.Customer);
-                item = new();
-                item.sparse = true;
-                item.TypeSpecified = true;
-                item.Name = row.LineDesc;
-                item.Type = ItemTypeEnum.NonInventory;
-                item.IncomeAccountRef = new ReferenceType() { Value = "1" };
-                item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
-
-                item = _api.updateItem(item).Result;
-                //Task<Item> returnedItemResult = _api.updateItem(item);
-                //item = await returnedItemResult;
-                await _api.updateItemDictionary();
-            }
-            return item;
+                return item;
+            } catch (Exception ex) { _logger.LogWarning(ex.Data + ex.Message + ex.StackTrace); }
+            return new Item();
         }
+
 
         public async System.Threading.Tasks.Task<Customer> validateCustomer(CsvRow row)
         {
