@@ -17,78 +17,81 @@ namespace qbo_dotNET.Logic
 
         public async System.Threading.Tasks.Task formatData()
         {
-
-            _logger.LogWarning("Beginning to format data");
-            _logger.LogWarning(rawData);
-
-            Stopwatch watch = new();
-            watch.Start();
-
-            using (StringReader reader = new StringReader(rawData))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            try
             {
-                csv.Context.RegisterClassMap<CsvRowMap>();
-                var records = csv.GetRecords<CsvRow>().ToList();
-                var groups = records.GroupBy(row => row.RefNumber);
+                _logger.LogWarning("Beginning to format data");
+                _logger.LogWarning(rawData);
 
-                foreach (var group in groups)
+                Stopwatch watch = new();
+                watch.Start();
+
+                using (StringReader reader = new StringReader(rawData))
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    var invoiceMapperConfig = new MapperConfiguration(cfg => { cfg.AddProfile<CsvRowToInvoiceProfile>(); });
-                    var invoiceMapper = invoiceMapperConfig.CreateMapper();
-                    var lineMapperConfig = new MapperConfiguration(cfg => { cfg.AddProfile<CsvRowToLineProfile>(); });
-                    var lineMapper = lineMapperConfig.CreateMapper();
+                    csv.Context.RegisterClassMap<CsvRowMap>();
+                    var records = csv.GetRecords<CsvRow>().ToList();
+                    var groups = records.GroupBy(row => row.RefNumber);
 
-                    int refNumber = group.Key;
-                    List<CsvRow> rowsByRef = group.ToList();
-
-                    List<Line> lines = new();
-                    Invoice invoice = new();
-                    Customer customer = new();
-                    CsvRow lastRow = new();
-
-                    foreach (var row in rowsByRef)
+                    foreach (var group in groups)
                     {
-                        invoice = invoiceMapper.Map<Invoice>(row);
-                        Line line = lineMapper.Map<Line>(row);
+                        var invoiceMapperConfig = new MapperConfiguration(cfg => { cfg.AddProfile<CsvRowToInvoiceProfile>(); });
+                        var invoiceMapper = invoiceMapperConfig.CreateMapper();
+                        var lineMapperConfig = new MapperConfiguration(cfg => { cfg.AddProfile<CsvRowToLineProfile>(); });
+                        var lineMapper = lineMapperConfig.CreateMapper();
 
-                        Item item = validateItem(row).Result;
+                        int refNumber = group.Key;
+                        List<CsvRow> rowsByRef = group.ToList();
 
-                        SalesItemLineDetail salesItemLineDetail = new() { Qty = (decimal.Parse(row.LineQty)), QtySpecified = true };
-                        salesItemLineDetail.ItemRef = new ReferenceType { Value = item.Id };
-                        line.DetailType = LineDetailTypeEnum.SalesItemLineDetail;
-                        line.DetailTypeSpecified = true;
-                        line.AnyIntuitObject = salesItemLineDetail;
-                        lines.Add(line);
-                        lastRow = row;
+                        List<Line> lines = new();
+                        Invoice invoice = new();
+                        Customer customer = new();
+                        CsvRow lastRow = new();
+
+                        foreach (var row in rowsByRef)
+                        {
+                            invoice = invoiceMapper.Map<Invoice>(row);
+                            Line line = lineMapper.Map<Line>(row);
+
+                            Item item = validateItem(row).Result;
+
+                            SalesItemLineDetail salesItemLineDetail = new() { Qty = (decimal.Parse(row.LineQty)), QtySpecified = true };
+                            salesItemLineDetail.ItemRef = new ReferenceType { Value = item.Id };
+                            line.DetailType = LineDetailTypeEnum.SalesItemLineDetail;
+                            line.DetailTypeSpecified = true;
+                            line.AnyIntuitObject = salesItemLineDetail;
+                            lines.Add(line);
+                            lastRow = row;
+                        }
+
+                        Task<Customer> returnedCustomerResult = validateCustomer(lastRow);
+                        customer = await returnedCustomerResult;
+
+                        if (customer.DisplayName.Equals("Bold Bean Jax Beach") || customer.DisplayName.Equals("Bold Bean Riverside"))
+                        {
+                            DiscountLineDetail discountLineDetail = new() { DiscountPercent = 15, DiscountPercentSpecified = true, PercentBased = true, PercentBasedSpecified = true };
+                            Line discountLine = new();
+                            discountLine.DetailType = LineDetailTypeEnum.DiscountLineDetail;
+                            discountLine.DetailTypeSpecified = true;
+                            discountLine.AnyIntuitObject = discountLineDetail;
+                            lines.Add(discountLine);
+                        }
+                        invoice.BillAddr = customer.BillAddr;
+                        invoice.ShipAddr = customer.ShipAddr;
+                        invoice.CustomerRef = new ReferenceType { Value = customer.Id, name = customer.DisplayName };
+                        invoice.Line = lines.ToArray<Line>();
+                        finalInvoiceList.Add(invoice);
                     }
+                    _logger.LogWarning("Done sorting items and lines");
+                    watch.Stop();
+                    TimeSpan ts = watch.Elapsed;
+                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                        ts.Hours, ts.Minutes, ts.Seconds,
+                        ts.Milliseconds / 10);
 
-                    Task<Customer> returnedCustomerResult = validateCustomer(lastRow);
-                    customer = await returnedCustomerResult;
+                    _logger.LogWarning("sorted in: " + elapsedTime);
 
-                    if (customer.DisplayName.Equals("Bold Bean Jax Beach") || customer.DisplayName.Equals("Bold Bean Riverside"))
-                    {
-                        DiscountLineDetail discountLineDetail = new() { DiscountPercent = 15, DiscountPercentSpecified = true, PercentBased = true, PercentBasedSpecified = true };
-                        Line discountLine = new();
-                        discountLine.DetailType = LineDetailTypeEnum.DiscountLineDetail;
-                        discountLine.DetailTypeSpecified = true;
-                        discountLine.AnyIntuitObject = discountLineDetail;
-                        lines.Add(discountLine);
-                    }
-                    invoice.BillAddr = customer.BillAddr;
-                    invoice.ShipAddr = customer.ShipAddr;
-                    invoice.CustomerRef = new ReferenceType { Value = customer.Id, name = customer.DisplayName };
-                    invoice.Line = lines.ToArray<Line>();
-                    finalInvoiceList.Add(invoice);
                 }
-                _logger.LogWarning("Done sorting items and lines");
-                watch.Stop();
-                TimeSpan ts = watch.Elapsed;
-                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                    ts.Hours, ts.Minutes, ts.Seconds,
-                    ts.Milliseconds / 10);
-
-                _logger.LogWarning("sorted in: " + elapsedTime);
-            }
+            }catch (Exception ex) { _logger.LogWarning(ex.Data + ex.Message); }
         }
 
         public async Task<Item> validateItem(CsvRow row)
@@ -172,8 +175,8 @@ namespace qbo_dotNET.Logic
                 customer.ShipAddr = row.ShipAddr;
                 Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                 customer = await returnedCustomerResult;
-                _api.customerDictionary.Add(customer.DisplayName, customer);
-                //_api.updateCustomerDictionary();
+                //_api.customerDictionary.Add(customer.DisplayName, customer);
+                _api.updateCustomerDictionary();
             }
             return customer;
         }
