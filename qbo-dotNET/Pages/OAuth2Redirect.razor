@@ -18,12 +18,16 @@
 
 
     @if (fileContent == null)
-    {
+        {
+            if (invoicesPosted == null)
+            {
         <h4>Select a CSV:</h4>
         <MatFileUpload OnChange="@FilesReadyForContent" Label="Drop a single file here or Browse" Style="background-color:#292a2b; border-bottom-color: #202021; "></MatFileUpload>
-    }
-    else
-    {
+            }
+            else { <h4> Invoices Posted (In theory):</h4>}
+        }
+        else
+        {
         <h4>File Processed</h4>
         <div class="buttons">
             <MatButton OnClick="@post">Post to Quickbooks</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
