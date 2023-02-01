@@ -119,6 +119,7 @@ namespace qbo_dotNET.Logic
                 {
                     Task<Item> returnedItemResult = _api.updateItem(item);
                     item = await returnedItemResult;
+                    await _api.updateItemDictionary();
                 }
             }
             else
