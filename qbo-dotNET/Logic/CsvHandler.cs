@@ -97,10 +97,10 @@ namespace qbo_dotNET.Logic
 
         public async Task<Item> validateItem(CsvRow row)
         {
+            Item item = new();
+
             try
             {
-                Item item = new();
-
                 if (_api.itemDictionary.TryGetValue(row.LineDesc, out item))
                 {
                     bool updated = false;
@@ -136,13 +136,12 @@ namespace qbo_dotNET.Logic
                     item.IncomeAccountRef = new ReferenceType() { Value = "1" };
                     item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
 
-                    item = _api.updateItem(item).Result;
-                    //Task<Item> returnedItemResult = _api.updateItem(item);
-                    //item = await returnedItemResult;
+                    Task<Item> returnedItemResult = _api.updateItem(item);
+                    item = await returnedItemResult;
                     await _api.updateItemDictionary();
                 }
                 return item;
-            } catch (Exception ex) { _logger.LogWarning(ex.Data + ex.Message + ex.StackTrace); }
+            } catch (Exception ex) { _logger.LogWarning(ex.Data + ex.Message + ex.StackTrace + item.Name); }
             return new Item();
         }
 
