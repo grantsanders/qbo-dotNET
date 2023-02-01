@@ -91,7 +91,7 @@ namespace qbo_dotNET.Logic
                     _logger.LogWarning("sorted in: " + elapsedTime);
 
                 }
-            }catch (Exception ex) { _logger.LogWarning(ex.Data + ex.Message); }
+            }catch (Exception ex) { _logger.LogWarning(ex.Data + ex.Message + ex.StackTrace); }
         }
 
         public async Task<Item> validateItem(CsvRow row)

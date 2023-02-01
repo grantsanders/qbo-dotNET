@@ -114,6 +114,7 @@
                     {
                         fileContent = await reader.ReadToEndAsync();
                         csvHandler.rawData = fileContent;
+                        await csvHandler.formatData();
                         logger.LogWarning("Data Stored");
                     }
                 }
@@ -125,8 +126,6 @@
         }
         finally
         {
-            await csvHandler.formatData();
-
             await InvokeAsync(StateHasChanged);
             disableButton = false;
         }
