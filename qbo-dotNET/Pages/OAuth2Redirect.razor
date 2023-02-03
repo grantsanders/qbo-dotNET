@@ -32,12 +32,13 @@
         <div class="buttons">
             <MatButton OnClick="@post">Post to Quickbooks</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
         </div>
-            <h5>Invoices Sorted for:</h5>
-            foreach (Invoice invoice in csvHandler.finalInvoiceList)
+            <h5>Invoices Posted for:</h5>
+            foreach (Invoice invoice in apiHandler.postedInvoices)
             {
                 <h4>@invoice.CustomerRef.name</h4>
             }
     }
+
 
 </body>
 
