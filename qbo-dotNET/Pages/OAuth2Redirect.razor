@@ -33,7 +33,7 @@
             <MatButton OnClick="@post">Post to Quickbooks</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
         </div>
             <h5>Invoices Posted for:</h5>
-            foreach (Invoice invoice in apiHandler.postedInvoices)
+            foreach (Invoice invoice in csvHandler.finalInvoiceList)
             {
                 <h4>@invoice.CustomerRef.name</h4>
             }
