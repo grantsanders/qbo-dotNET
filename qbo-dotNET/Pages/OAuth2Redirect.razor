@@ -84,6 +84,8 @@
     {
         apiHandler.postInvoices(csvHandler.finalInvoiceList);
         logger.LogWarning("Done posting invoices");
+        var httpClient = new HttpClient();
+        //await httpClient.PostAsync("https://granthum-api.azurewebsites.net", new InvoiceRecord());  TODO jsonserialize invoice record for api call
         invoicesPosted = true;
     }
 
