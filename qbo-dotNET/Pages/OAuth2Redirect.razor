@@ -84,11 +84,14 @@
         }
     }
 
-    public void uploadClicked ()
-{
+    public async System.Threading.Tasks.Task uploadClicked ()
+    {
         uploadDisabled = true;
+
+        await InvokeAsync(StateHasChanged);
+
         post();
-}
+    }
 
     public void nullify()
     {
