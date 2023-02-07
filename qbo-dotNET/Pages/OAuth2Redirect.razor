@@ -18,25 +18,33 @@
 
 
     @if (fileContent == null)
+    {
+        if (invoicesPosted == null)
         {
-            if (invoicesPosted == null)
-            {
-        <h4>Select a CSV:</h4>
-        <MatFileUpload OnChange="@FilesReadyForContent" Label="Drop a single file here or Browse" Style="background-color:#292a2b; border-bottom-color: #202021; "></MatFileUpload>
-            }
-            else { <h4> Invoices Posted (In theory):</h4>}
+            <h4>Select a CSV:</h4>
+            <MatFileUpload OnChange="@FilesReadyForContent" Label="Drop a single file here or Browse" Style="background-color:#292a2b; border-bottom-color: #202021; "></MatFileUpload>
         }
-        else
-        {
+    }
+    else if (invoicesPosted == false)
+    {
         <h4>File Processed</h4>
+
         <div class="buttons">
             <MatButton OnClick="@post">Post to Quickbooks</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
         </div>
-            <h5>Invoices Posted for:</h5>
-            foreach (Invoice invoice in csvHandler.finalInvoiceList)
-            {
-                <h4>@invoice.CustomerRef.name</h4>
-            }
+        <h4>Invoices Formatted for:</h4>
+        foreach (Invoice invoice in csvHandler.finalInvoiceList)
+        {
+            <h5>@invoice.CustomerRef.name</h5>
+        }
+    }
+    else if (invoicesPosted == true)
+    {
+        <h4> Invoices Posted for:</h4>
+        foreach (Invoice invoice in apiHandler.postedInvoiceList)
+        {
+            <h5>@invoice.CustomerRef.name</h5>
+        }
     }
 
 
@@ -82,7 +90,7 @@
 
     async System.Threading.Tasks.Task post()
     {
-        apiHandler.postInvoices(csvHandler.finalInvoiceList);
+        await apiHandler.postInvoices(csvHandler.finalInvoiceList);
         logger.LogWarning("Done posting invoices");
         var httpClient = new HttpClient();
         //await httpClient.PostAsync("https://granthum-api.azurewebsites.net", new InvoiceRecord());  TODO jsonserialize invoice record for api call
@@ -122,6 +130,7 @@
                         csvHandler.rawData = fileContent;
                         await csvHandler.formatData();
                         logger.LogWarning("Data Stored");
+                        invoicesPosted = false;
                     }
                 }
             }

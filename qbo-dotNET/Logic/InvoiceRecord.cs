@@ -7,11 +7,11 @@ namespace qbo_dotNET.Logic
     {
         public InvoiceRecord() { }
 
-        private string id = "";
-        private bool importedSuccessfully { get; set; }
-        private string numberOfInvoices { get; set; }
-        private string created = "";
-        private string note = "";
+        public string? Id { get; set; }
+        public bool? ImportedSuccessfully { get; set; }
+        public string? NumberOfInvoices { get; set; }
+        public string? Created { get; set; }
+        public string? Note { get; set; }
 
     }
 }

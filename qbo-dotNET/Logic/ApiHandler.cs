@@ -28,7 +28,7 @@ namespace qbo_dotNET.Logic
         public DataService service { get; set; }
         public Dictionary<string, Item> itemDictionary { get; set; }
         public Dictionary<string, Customer> customerDictionary { get; set; }
-        public List<Invoice> postedInvoices { get; set; }
+        public List<Invoice> postedInvoiceList { get; set; }
         private readonly ILogger<ApiHandler> _logger;
 
         public ApiHandler(ILogger<ApiHandler> logger)
@@ -98,7 +98,7 @@ namespace qbo_dotNET.Logic
             {
                 service.AddAsync<Invoice>(invoice);
                 _logger.LogWarning("Invoice added: " + invoice.CustomerRef.name);
-                postedInvoices.Add(invoice);
+                postedInvoiceList.Add(invoice);
 
             }
         }

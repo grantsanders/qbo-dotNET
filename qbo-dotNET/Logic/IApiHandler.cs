@@ -17,7 +17,7 @@ namespace qbo_dotNET.Logic
         public OAuth2Client auth2Client { get; set; }
         public ServiceContext serviceContext { get; set; }
         public DataService service { get; set; }
-        public List<Invoice> postedInvoices { get; set; }
+        public List<Invoice> postedInvoiceList { get; set; }
         public Dictionary<string, Item> itemDictionary { get; set; }
         public Dictionary<string, Customer> customerDictionary { get; set; }
 
