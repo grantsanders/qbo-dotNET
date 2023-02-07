@@ -3,6 +3,8 @@ using System.Globalization;
 using AutoMapper;
 using CsvHelper;
 using Intuit.Ipp.Data;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace qbo_dotNET.Logic
 {
@@ -80,6 +82,12 @@ namespace qbo_dotNET.Logic
                         invoice.ShipAddr = customer.ShipAddr;
                         invoice.CustomerRef = new ReferenceType { Value = customer.Id, name = customer.DisplayName };
                         invoice.Line = lines.ToArray<Line>();
+
+                        var jsonString = JsonConvert.SerializeObject(
+           invoice, Formatting.Indented,
+           new JsonConverter[] { new StringEnumConverter() });
+
+                        _logger.LogWarning("Added invoice " + jsonString);
                         finalInvoiceList.Add(invoice);
                     }
                     _logger.LogWarning("Done sorting items and lines");
