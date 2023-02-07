@@ -90,11 +90,11 @@
 
     async System.Threading.Tasks.Task post()
     {
+        invoicesPosted = true;
         await apiHandler.postInvoices(csvHandler.finalInvoiceList);
         logger.LogWarning("Done posting invoices");
         var httpClient = new HttpClient();
         //await httpClient.PostAsync("https://granthum-api.azurewebsites.net", new InvoiceRecord());  TODO jsonserialize invoice record for api call
-        invoicesPosted = true;
     }
 
     async System.Threading.Tasks.Task FilesReadyForContent(IMatFileUploadEntry[] files)
