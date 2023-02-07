@@ -69,27 +69,11 @@ namespace qbo_dotNET.Logic
             Customer c = new();
             Item i = new();
 
-            try
-            {
-                IEnumerable<Customer> customerList = service.FindAll(c).ToList();
-                IEnumerable<Item> itemList = service.FindAll(i).ToList();
+            IEnumerable<Customer> customerList = service.FindAll(c).ToList();
+            IEnumerable<Item> itemList = service.FindAll(i).ToList();
 
-                foreach (Item item in itemList)
-                {
-                    if (item.Type == ItemTypeEnum.Service)
-                    {
-                        item.Active = false;
-                        item.ActiveSpecified = true;
-                        item.Name += " old";
-                        updateItem(item);
-                    }
-                }
-
-                customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c, StringComparer.OrdinalIgnoreCase);
-                itemDictionary = itemList.ToDictionary(i => i.Name, i => i, StringComparer.OrdinalIgnoreCase);
-
-            }
-            catch (Exception ex) { _logger.LogError(ex.Data + " " + ex.Message); }
+            customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c, StringComparer.OrdinalIgnoreCase);
+            itemDictionary = itemList.ToDictionary(i => i.Name, i => i, StringComparer.OrdinalIgnoreCase);
         }
 
         public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList)
