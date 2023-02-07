@@ -90,6 +90,8 @@ namespace qbo_dotNET.Logic
                         _logger.LogWarning("Added invoice " + jsonString);
                         finalInvoiceList.Add(invoice);
                     }
+
+                    finalInvoiceList.Reverse();
                     _logger.LogWarning("Done sorting items and lines");
                     watch.Stop();
                     TimeSpan ts = watch.Elapsed;
@@ -106,7 +108,6 @@ namespace qbo_dotNET.Logic
         public async Task<Item> validateItem(CsvRow row)
         {
             Item item = new();
-
             try
             {
                 if (_api.itemDictionary.TryGetValue(row.LineDesc, out item))

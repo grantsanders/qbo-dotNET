@@ -84,16 +84,16 @@
         }
     }
 
-    public async System.Threading.Tasks.Task uploadClicked ()
+    private async System.Threading.Tasks.Task uploadClicked ()
     {
         uploadDisabled = true;
 
-        await InvokeAsync(StateHasChanged);
+        StateHasChanged();
 
-        post();
+        await post();
     }
 
-    public void nullify()
+    private void nullify()
     {
         fileContent = null;
         csvHandler.finalInvoiceList.Clear();
@@ -101,8 +101,9 @@
         invoicesPosted = null;
     }
 
-    async System.Threading.Tasks.Task post()
+    private async System.Threading.Tasks.Task post()
     {
+        invoicesPosted = true;
         await apiHandler.postInvoices(csvHandler.finalInvoiceList);
         invoicesPosted = true;
         logger.LogWarning("Done posting invoices");
