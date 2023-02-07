@@ -94,9 +94,10 @@ namespace qbo_dotNET.Logic
 
         public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList)
         {
+            postedInvoiceList = new();
+
             foreach (Invoice invoice in finalInvoiceList)
             {
-                postedInvoiceList = new();
                 Invoice returnedInvoice = service.Add<Invoice>(invoice);
                 _logger.LogWarning("Invoice added: " + invoice.CustomerRef.name);
                 postedInvoiceList.Add(returnedInvoice);
