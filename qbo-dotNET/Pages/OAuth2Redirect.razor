@@ -41,11 +41,14 @@
     else if (invoicesPosted == true)
     {
         <h4> Invoices Posted for:</h4>
-        foreach (Invoice invoice in apiHandler.postedInvoiceList)
-        {
+            if (apiHandler.postedInvoiceList != null)
+            {
+                foreach (Invoice invoice in apiHandler.postedInvoiceList)
+                {
             <h5>@invoice.CustomerRef.name</h5>
+                }
+            }
         }
-    }
 
 
 </body>
@@ -85,6 +88,7 @@
     {
         fileContent = null;
         csvHandler.finalInvoiceList.Clear();
+        apiHandler.postedInvoiceList.Clear();
         invoicesPosted = null;
     }
 
