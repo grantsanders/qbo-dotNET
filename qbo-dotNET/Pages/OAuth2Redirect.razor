@@ -9,8 +9,7 @@
 @using Intuit.Ipp.OAuth2PlatformClient
 @using System.Diagnostics
 @using System.Web
-@using Microsoft.AspNetCore.Components
-@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Components;
 
 
 <PageTitle>Invoicing</PageTitle>
@@ -19,28 +18,28 @@
 
 
     @if (fileContent == null)
+    {
+        if (invoicesPosted == null)
         {
-            if (invoicesPosted == null)
-            {
             <h4>Select a CSV:</h4>
             <MatFileUpload OnChange="@FilesReadyForContent" Label="Drop a single file here or Browse" Style="background-color:#292a2b; border-bottom-color: #202021; "></MatFileUpload>
-            }
         }
-        else if (invoicesPosted == false)
-        {
+    }
+    else if (invoicesPosted == false)
+    {
         <h4>File Processed</h4>
 
         <div class="buttons">
             <MatButton OnClick="@post">Post to Quickbooks</MatButton> <MatButton OnClick="@nullify">Clear</MatButton>
         </div>
         <h4>Invoices Formatted for:</h4>
-            foreach (Invoice invoice in csvHandler.finalInvoiceList)
-            {
-            <h5>@invoice.CustomerRef.name</h5>
-            }
-        }
-        else if (invoicesPosted == true)
+        foreach (Invoice invoice in csvHandler.finalInvoiceList)
         {
+            <h5>@invoice.CustomerRef.name</h5>
+        }
+    }
+    else if (invoicesPosted == true)
+    {
         <h4> Invoices Posted for:</h4>
             if (apiHandler.postedInvoiceList != null)
             {
@@ -56,109 +55,104 @@
 
 @code {
 
-            string? fileContent;
-            bool? invoicesPosted;
+    string? fileContent;
+    bool? invoicesPosted;
 
     protected override async System.Threading.Tasks.Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
         {
-            if (firstRender)
-            {
 
-                try
-                {
-                    apiHandler.code = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
-                        .Split('&')
-                        .FirstOrDefault(s => s.StartsWith("code="))
-                        ?.Split('=')[1];
-
-                    apiHandler.realmId = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
-                        .Split('&')
-                        .FirstOrDefault(s => s.StartsWith("realmId="))
-                        ?.Split('=')[1];
-
-                    apiHandler.getServiceContext();
-
-                    logger.LogWarning("Service Context Retrieved");
-                }
-                catch (IndexOutOfRangeException ex) { logger.LogError(ex.Message + ex.Source); }
-            }
-        }
-
-        private void nullify()
-        {
-            fileContent = null;
-            csvHandler.finalInvoiceList.Clear();
-            apiHandler.postedInvoiceList.Clear();
-            invoicesPosted = null;
-        }
-
-        private async System.Threading.Tasks.Task post()
-        {
-            invoicesPosted = true;
-            StateHasChanged();
-            await apiHandler.postInvoices(csvHandler.finalInvoiceList);
-            invoicesPosted = true;
-            logger.LogWarning("Done posting invoices");
-            var httpClient = new HttpClient();
-            InvoiceRecord invoiceRecord = new();
-            invoiceRecord.ImportedSuccessfully = true;
-            invoiceRecord.NumberOfInvoices = (apiHandler.postedInvoiceList.Count().ToString());
-
-            string output = JsonConvert.SerializeObject(invoiceRecord);
-            var httpContent = new StringContent(output);
-
-            HttpClient client = new();
-            await httpClient.PostAsync("https://granthum-api.azurewebsites.net", httpContent);
-        }
-
-        async System.Threading.Tasks.Task FilesReadyForContent(IMatFileUploadEntry[] files)
-        {
             try
             {
-                var file = files.FirstOrDefault();
-                if (file == null)
-                {
-                    return;
-                }
-                using (var stream = new MemoryStream())
-                {
-                    var sw = Stopwatch.StartNew();
-                    await file.WriteToStreamAsync(stream);
-                    sw.Stop();
-                    if (stream.Length > 1024 * 1024)
-                    {
-                        fileContent = "";
-                        fileContent += $"Name:\t{file.Name}\r\n";
-                        fileContent += $"Type:\t{file.Type}\r\n";
-                        fileContent += $"LastModified:\t{file.LastModified}\r\n";
-                        fileContent += $"Size:\t{file.Size}\r\n";
-                        fileContent += $"Time:\t{sw.Elapsed}\r\n";
-                        fileContent += $"Speed:\t{(stream.Length / sw.Elapsed.TotalSeconds):N0}  b/s\r\n";
-                    }
-                    else
-                    {
-                        stream.Seek(0, SeekOrigin.Begin);
-                        using (var reader = new StreamReader(stream))
-                        {
-                            fileContent = await reader.ReadToEndAsync();
-                            csvHandler.rawData = fileContent;
-                            await csvHandler.formatData();
-                            logger.LogWarning("Data Stored");
-                            invoicesPosted = false;
-                        }
-                    }
-                }
+                apiHandler.code = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
+                    .Split('&')
+                    .FirstOrDefault(s => s.StartsWith("code="))
+                    ?.Split('=')[1];
+
+                apiHandler.realmId = navigationManager.ToBaseRelativePath(navigationManager.Uri).Split('?')[1]
+                    .Split('&')
+                    .FirstOrDefault(s => s.StartsWith("realmId="))
+                    ?.Split('=')[1];
+
+                apiHandler.getServiceContext();
+
+                logger.LogWarning("Service Context Retrieved");
             }
-            catch (Exception e)
-            {
-                fileContent = $"Error:\r\n{e.Message}\r\n{e.StackTrace}";
-            }
-            finally
-            {
-                await InvokeAsync(StateHasChanged);
-            }
+            catch (IndexOutOfRangeException ex) { logger.LogError(ex.Message + ex.Source); }
         }
     }
 
+    private void nullify()
+    {
+        fileContent = null;
+        csvHandler.finalInvoiceList.Clear();
+        apiHandler.postedInvoiceList.Clear();
+        invoicesPosted = null;
+    }
+
+    private async System.Threading.Tasks.Task post()
+    {
+        invoicesPosted = true;
+        StateHasChanged();
+        await apiHandler.postInvoices(csvHandler.finalInvoiceList);
+        invoicesPosted = true;
+        logger.LogWarning("Done posting invoices");
+        var httpClient = new HttpClient();
+        InvoiceRecord invoiceRecord = new();
+        invoiceRecord.ImportedSuccessfully = true;
+        invoiceRecord.NumberOfInvoices = apiHandler.postedInvoiceList.Count().ToString();
+
+        //await httpClient.PostAsync("https://granthum-api.azurewebsites.net", new InvoiceRecord());  TODO jsonserialize invoice record for api call
+    }
+
+    async System.Threading.Tasks.Task FilesReadyForContent(IMatFileUploadEntry[] files)
+    {
+        try
+        {
+            var file = files.FirstOrDefault();
+            if (file == null)
+            {
+                return;
+            }
+            using (var stream = new MemoryStream())
+            {
+                var sw = Stopwatch.StartNew();
+                await file.WriteToStreamAsync(stream);
+                sw.Stop();
+                if (stream.Length > 1024 * 1024)
+                {
+                    fileContent = "";
+                    fileContent += $"Name:\t{file.Name}\r\n";
+                    fileContent += $"Type:\t{file.Type}\r\n";
+                    fileContent += $"LastModified:\t{file.LastModified}\r\n";
+                    fileContent += $"Size:\t{file.Size}\r\n";
+                    fileContent += $"Time:\t{sw.Elapsed}\r\n";
+                    fileContent += $"Speed:\t{(stream.Length / sw.Elapsed.TotalSeconds):N0}  b/s\r\n";
+                }
+                else
+                {
+                    stream.Seek(0, SeekOrigin.Begin);
+                    using (var reader = new StreamReader(stream))
+                    {
+                        fileContent = await reader.ReadToEndAsync();
+                        csvHandler.rawData = fileContent;
+                        await csvHandler.formatData();
+                        logger.LogWarning("Data Stored");
+                        invoicesPosted = false;
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            fileContent = $"Error:\r\n{e.Message}\r\n{e.StackTrace}";
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}
 
 
