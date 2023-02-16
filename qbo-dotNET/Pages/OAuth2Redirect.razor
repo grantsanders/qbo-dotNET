@@ -9,7 +9,8 @@
 @using Intuit.Ipp.OAuth2PlatformClient
 @using System.Diagnostics
 @using System.Web
-@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components
+@using Newtonsoft.Json
 
 
 <PageTitle>Invoicing</PageTitle>
@@ -103,7 +104,11 @@
         invoiceRecord.ImportedSuccessfully = true;
         invoiceRecord.NumberOfInvoices = apiHandler.postedInvoiceList.Count().ToString();
 
-        //await httpClient.PostAsync("https://granthum-api.azurewebsites.net", new InvoiceRecord());  TODO jsonserialize invoice record for api call
+        string invoiceRecordJson = JsonConvert.SerializeObject(invoiceRecord);
+        var httpContent = new StringContent(invoiceRecordJson);
+
+        await httpClient.PostAsync("https://granthum-api.azurewebsites.net", httpContent);
+
     }
 
     async System.Threading.Tasks.Task FilesReadyForContent(IMatFileUploadEntry[] files)
