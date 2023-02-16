@@ -106,7 +106,7 @@
 
         string invoiceRecordJson = JsonConvert.SerializeObject(invoiceRecord);
         var httpContent = new StringContent(invoiceRecordJson);
-        var response = await httpClient.PostAsync("https://granthum-api.azurewebsites.net/api/invoicerecords", httpContent);
+        var response = await httpClient.PostAsJsonAsync("https://granthum-api.azurewebsites.net/api/invoicerecords", httpContent);
         logger.LogWarning(response.StatusCode + " " + response.Content);
 
 
