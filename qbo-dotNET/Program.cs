@@ -14,6 +14,7 @@ builder.Services.AddLogging(loggingBuilder =>
 {
     loggingBuilder.AddConsole();
 });
+
 builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 var app = builder.Build();

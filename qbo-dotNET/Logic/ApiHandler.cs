@@ -33,6 +33,7 @@ namespace qbo_dotNET.Logic
 
         public ApiHandler(ILogger<ApiHandler> logger)
         {
+            postedInvoiceList = new();
             var vaultUri = "https://granthum-vault.vault.azure.net/";
             var client = new SecretClient(new Uri(vaultUri), new DefaultAzureCredential());
             clientId = client.GetSecret("boldbean-dotNET-clientID").Value.Value.ToString();
