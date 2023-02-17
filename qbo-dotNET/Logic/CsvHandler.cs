@@ -21,8 +21,8 @@ namespace qbo_dotNET.Logic
         {
             try
             {
-                _logger.LogWarning("Beginning to format data");
-                _logger.LogWarning(rawData);
+                _logger.LogInformation("Beginning to format data");
+                _logger.LogInformation(rawData);
 
                 Stopwatch watch = new();
                 watch.Start();
@@ -54,7 +54,7 @@ namespace qbo_dotNET.Logic
                             invoice = invoiceMapper.Map<Invoice>(row);
                             Line line = lineMapper.Map<Line>(row);
 
-                            
+
                             Item item = validateItem(row).Result;
 
                             SalesItemLineDetail salesItemLineDetail = new() { Qty = (decimal.Parse(row.LineQty)), QtySpecified = true };
@@ -87,22 +87,23 @@ namespace qbo_dotNET.Logic
            invoice, Formatting.Indented,
            new JsonConverter[] { new StringEnumConverter() });
 
-                        _logger.LogWarning("Added invoice " + jsonString);
+                        _logger.LogInformation("Added invoice " + jsonString);
                         finalInvoiceList.Add(invoice);
                     }
 
                     finalInvoiceList.Reverse();
-                    _logger.LogWarning("Done sorting items and lines");
+                    _logger.LogInformation("Done sorting items and lines");
                     watch.Stop();
                     TimeSpan ts = watch.Elapsed;
                     string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                         ts.Hours, ts.Minutes, ts.Seconds,
                         ts.Milliseconds / 10);
 
-                    _logger.LogWarning("sorted in: " + elapsedTime);
+                    _logger.LogInformation("sorted in: " + elapsedTime);
 
                 }
-            }catch (Exception ex) { _logger.LogWarning(ex.Data + ex.Message + ex.StackTrace); }
+            }
+            catch (Exception ex) { _logger.LogInformation(ex.Data + ex.Message + ex.StackTrace); }
         }
 
         public async Task<Item> validateItem(CsvRow row)
@@ -114,7 +115,7 @@ namespace qbo_dotNET.Logic
                 {
                     bool updated = false;
 
-                    //_logger.LogWarning("Found, " + item.Name);
+                    //_logger.LogInformation("Found, " + item.Name);
                     if (!item.Active)
                     {
                         item.Active = true;
@@ -136,7 +137,7 @@ namespace qbo_dotNET.Logic
                 }
                 else
                 {
-                    _logger.LogWarning("Not found, " + row.Customer);
+                    _logger.LogInformation("Not found, " + row.Customer);
                     item = new();
                     item.sparse = true;
                     item.TypeSpecified = true;
@@ -150,7 +151,8 @@ namespace qbo_dotNET.Logic
                     await _api.updateItemDictionary();
                 }
                 return item;
-            } catch (Exception ex) { _logger.LogWarning(ex.Data + ex.Message + ex.StackTrace + item.Name); }
+            }
+            catch (Exception ex) { _logger.LogInformation(ex.Data + ex.Message + ex.StackTrace + item.Name); }
             return new Item();
         }
 
@@ -161,7 +163,7 @@ namespace qbo_dotNET.Logic
             if (_api.customerDictionary.TryGetValue(row.Customer, out customer))
             {
                 bool updated = false;
-                _logger.LogWarning("Found customer, " + customer.DisplayName);
+                _logger.LogInformation("Found customer, " + customer.DisplayName);
 
                 if (customer.BillAddr != row.BillAddr || customer.ShipAddr != row.ShipAddr)
                 {
@@ -178,19 +180,17 @@ namespace qbo_dotNET.Logic
                 {
                     Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                     customer = await returnedCustomerResult;
-                    //_api.updateCustomerDictionary();
                 }
             }
             else
             {
                 customer = new();
-                _logger.LogWarning("Not found, " + row.Customer);
+                _logger.LogInformation("Not found, " + row.Customer);
                 customer.DisplayName = row.Customer;
                 customer.BillAddr = row.BillAddr;
                 customer.ShipAddr = row.ShipAddr;
                 Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                 customer = await returnedCustomerResult;
-                //_api.customerDictionary.Add(customer.DisplayName, customer);
                 _api.updateCustomerDictionary();
             }
             return customer;

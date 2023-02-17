@@ -17,7 +17,7 @@
 
 <body class="invoicing">
 
-
+    
     @if (fileContent == null)
     {
         if (invoicesPosted == null)
@@ -42,14 +42,14 @@
     else if (invoicesPosted == true)
     {
         <h4> Invoices Posted for:</h4>
-            if (apiHandler.postedInvoiceList != null)
+        if (apiHandler.postedInvoiceList != null)
+        {
+            foreach (Invoice invoice in apiHandler.postedInvoiceList)
             {
-                foreach (Invoice invoice in apiHandler.postedInvoiceList)
-                {
-            <h5>@invoice.CustomerRef.name</h5>
-                }
+                <h5>@invoice.CustomerRef.name</h5>
             }
         }
+    }
 
 
 </body>
@@ -78,7 +78,7 @@
 
                 apiHandler.getServiceContext();
 
-                logger.LogWarning("Service Context Retrieved");
+                logger.LogInformation("Service Context Retrieved");
             }
             catch (IndexOutOfRangeException ex) { logger.LogError(ex.Message + ex.Source); }
         }
@@ -98,18 +98,18 @@
         StateHasChanged();
         await apiHandler.postInvoices(csvHandler.finalInvoiceList);
         invoicesPosted = true;
-        logger.LogWarning("Done posting invoices");
+        logger.LogInformation("Done posting invoices");
         var httpClient = new HttpClient();
         InvoiceRecord invoiceRecord = new();
         invoiceRecord.ImportedSuccessfully = true;
         invoiceRecord.NumberOfInvoices = apiHandler.postedInvoiceList.Count().ToString();
 
         string invoiceRecordJson = JsonConvert.SerializeObject(invoiceRecord);
-        var httpContent = new StringContent(invoiceRecordJson, encoding:System.Text.Encoding.UTF8, "application/json");
+        var httpContent = new StringContent(invoiceRecordJson, encoding: System.Text.Encoding.UTF8, "application/json");
         var response = await httpClient.PostAsync("https://granthum-api.azurewebsites.net/api/invoicerecords", httpContent);
         var responseContent = await response.Content.ReadAsStringAsync();
 
-        logger.LogWarning(responseContent.ToString());
+        logger.LogInformation(responseContent.ToString());
 
 
     }
@@ -146,7 +146,7 @@
                         fileContent = await reader.ReadToEndAsync();
                         csvHandler.rawData = fileContent;
                         await csvHandler.formatData();
-                        logger.LogWarning("Data Stored");
+                        logger.LogInformation("Data Stored");
                         invoicesPosted = false;
                     }
                 }
