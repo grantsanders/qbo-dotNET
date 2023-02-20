@@ -78,13 +78,16 @@ namespace qbo_dotNET.Logic
                             discountLine.AnyIntuitObject = discountLineDetail;
                             lines.Add(discountLine);
                         }
+
                         invoice.BillAddr = customer.BillAddr;
                         invoice.ShipAddr = customer.ShipAddr;
                         invoice.CustomerRef = new ReferenceType { Value = customer.Id, name = customer.DisplayName };
                         invoice.Line = lines.ToArray<Line>();
+                        invoice.AllowOnlineACHPaymentSpecified = true;
+                        invoice.AllowOnlineACHPayment = true;
 
                         var jsonString = JsonConvert.SerializeObject(
-           invoice, Formatting.Indented,
+              invoice, Formatting.Indented,
            new JsonConverter[] { new StringEnumConverter() });
 
                         _logger.LogInformation("Added invoice " + jsonString);
@@ -180,6 +183,7 @@ namespace qbo_dotNET.Logic
                 {
                     Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                     customer = await returnedCustomerResult;
+                    await _api.updateCustomerDictionary();
                 }
             }
             else
@@ -191,7 +195,7 @@ namespace qbo_dotNET.Logic
                 customer.ShipAddr = row.ShipAddr;
                 Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                 customer = await returnedCustomerResult;
-                _api.updateCustomerDictionary();
+                await _api.updateCustomerDictionary();
             }
             return customer;
         }
