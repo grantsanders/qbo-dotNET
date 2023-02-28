@@ -166,7 +166,7 @@ namespace qbo_dotNET.Logic
             if (_api.customerDictionary.TryGetValue(row.Customer, out customer))
             {
                 bool updated = false;
-                _logger.LogInformation("Found customer, " + customer.DisplayName);
+                _logger.LogWarning("Found customer, " + customer.DisplayName);
 
                 if (customer.BillAddr != row.BillAddr || customer.ShipAddr != row.ShipAddr)
                 {
