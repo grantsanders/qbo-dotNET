@@ -66,12 +66,8 @@ namespace qbo_dotNET.Logic
                             lastRow = row;
                         }
 
-
-                        try
-                        {
                             Task<Customer> returnedCustomerResult = validateCustomer(lastRow);
                             customer = await returnedCustomerResult;
-                        } catch (Exception ex) { _logger.LogWarning(ex.Message + " " + ex.Data); }
 
                         if (customer.DisplayName.Equals("Bold Bean Jax Beach") || customer.DisplayName.Equals("Bold Bean Riverside"))
                         {
