@@ -106,7 +106,7 @@ namespace qbo_dotNET.Logic
 
                 }
             }
-            catch (Exception ex) { _logger.LogInformation(ex.Data + ex.Message + ex.StackTrace); }
+            catch (Exception ex) { _logger.LogWarning(ex.Data + ex.Message + ex.StackTrace); }
         }
 
         public async Task<Item> validateItem(CsvRow row)
