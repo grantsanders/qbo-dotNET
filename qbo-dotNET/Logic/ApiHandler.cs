@@ -75,6 +75,11 @@ namespace qbo_dotNET.Logic
 
             customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c, StringComparer.OrdinalIgnoreCase);
             itemDictionary = itemList.ToDictionary(i => i.Name, i => i, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var customer in customerDictionary)
+            {
+                _logger.LogWarning(customer.Value.DisplayName);
+            }
         }
 
         public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList)
