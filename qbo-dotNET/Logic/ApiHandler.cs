@@ -76,10 +76,6 @@ namespace qbo_dotNET.Logic
             customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c, StringComparer.OrdinalIgnoreCase);
             itemDictionary = itemList.ToDictionary(i => i.Name, i => i, StringComparer.OrdinalIgnoreCase);
 
-            foreach (var customer in customerDictionary)
-            {
-                _logger.LogWarning(customer.Value.DisplayName);
-            }
         }
 
         public async System.Threading.Tasks.Task postInvoices(List<Invoice> finalInvoiceList)
@@ -95,9 +91,9 @@ namespace qbo_dotNET.Logic
             }
         }
 
-        public async System.Threading.Tasks.Task updateCustomerDictionary() => customerDictionary = customerDictionary = service.FindAll(new Customer()).ToList().ToDictionary(c => c.DisplayName, c => c) ?? new Dictionary<string, Customer>();
+        public async System.Threading.Tasks.Task updateCustomerDictionary() => customerDictionary = customerDictionary = service.FindAll(new Customer()).ToList().ToDictionary(c => c.DisplayName, c => c, StringComparer.OrdinalIgnoreCase) ?? new Dictionary<string, Customer>(StringComparer.OrdinalIgnoreCase);
 
-        public async System.Threading.Tasks.Task updateItemDictionary() => itemDictionary = service.FindAll(new Item()).ToList().ToDictionary(i => i.Name, i => i, StringComparer.OrdinalIgnoreCase) ?? new Dictionary<string, Item>();
+        public async System.Threading.Tasks.Task updateItemDictionary() => itemDictionary = service.FindAll(new Item()).ToList().ToDictionary(i => i.Name, i => i, StringComparer.OrdinalIgnoreCase) ?? new Dictionary<string, Item>(StringComparer.OrdinalIgnoreCase);
 
         public async System.Threading.Tasks.Task<Item> updateItem(Item item) { return await System.Threading.Tasks.Task.FromResult(service.Update<Item>(item)); }
 
