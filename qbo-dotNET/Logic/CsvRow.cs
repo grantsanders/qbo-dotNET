@@ -82,10 +82,10 @@ namespace qbo_dotNET.Logic
         public TaxLineDetail taxLineDetail = new();
         public ReferenceType CustomerRef = new();
         public ReferenceType referenceType = new();
-        public PhysicalAddress BillAddr;
-        public PhysicalAddress ShipAddr;
-        public MemoRef CustomerMemo;
-        public EmailAddress BillEmail = new();
+        public PhysicalAddress BillAddr { get; set; }
+        public PhysicalAddress ShipAddr { get; set; }
+        public MemoRef CustomerMemo { get; set; }
+        public EmailAddress BillEmail { get; set; }
         public bool DetailTypeSpecified = true;
         public bool AmountSpecified = true;
         public bool AllowOnlineACHPayment = true;
