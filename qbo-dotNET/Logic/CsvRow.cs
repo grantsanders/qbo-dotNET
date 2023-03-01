@@ -26,7 +26,8 @@ namespace qbo_dotNET.Logic
                 PostalCode = BillAddrPostalCode,
                 Country = BillAddrCountry
             };
-            BillEmail.Address = BillEmailCsv;
+            BillEmail = new()
+            { Address = BillEmailCsv };
 
             CustomerMemo = new()
             {
