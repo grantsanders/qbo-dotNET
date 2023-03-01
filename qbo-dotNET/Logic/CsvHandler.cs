@@ -79,8 +79,8 @@ namespace qbo_dotNET.Logic
                             lines.Add(discountLine);
                         }
 
-                        invoice.BillAddr = customer.BillAddr;
-                        invoice.ShipAddr = customer.ShipAddr;
+                        customer.BillAddr = invoice.BillAddr;
+                        customer.ShipAddr = invoice.ShipAddr;
                         invoice.CustomerRef = new ReferenceType { Value = customer.Id, name = customer.DisplayName };
                         invoice.Line = lines.ToArray<Line>();
                         invoice.AllowOnlineACHPaymentSpecified = true;
