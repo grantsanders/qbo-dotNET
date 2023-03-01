@@ -8,31 +8,31 @@ namespace qbo_dotNET.Logic
         public CsvRow()
         {
             referenceType.name = LineDesc;
-            ShipAddr = new()
-            {
-                Line1 = ShipAddrLine1,
-                Line2 = ShipAddrLine2,
-                Line3 = ShipAddrLine3,
-                City = ShipAddrCity,
-                PostalCode = ShipAddrPostalCode,
-                Country = ShipAddrCountry
-            };
-            BillAddr = new()
-            {
-                Line1 = BillAddrLine1,
-                Line2 = BillAddrLine2,
-                Line3 = BillAddrLine3,
-                City = BillAddrCity,
-                PostalCode = BillAddrPostalCode,
-                Country = BillAddrCountry
-            };
-            BillEmail = new()
-            { Address = BillEmailCsv };
+            //ShipAddr = new()
+            //{
+            //    Line1 = ShipAddrLine1,
+            //    Line2 = ShipAddrLine2,
+            //    Line3 = ShipAddrLine3,
+            //    City = ShipAddrCity,
+            //    PostalCode = ShipAddrPostalCode,
+            //    Country = ShipAddrCountry
+            //};
+            //BillAddr = new()
+            //{
+            //    Line1 = BillAddrLine1,
+            //    Line2 = BillAddrLine2,
+            //    Line3 = BillAddrLine3,
+            //    City = BillAddrCity,
+            //    PostalCode = BillAddrPostalCode,
+            //    Country = BillAddrCountry
+            //};
+            //BillEmail = new()
+            //{ Address = BillEmailCsv };
 
-            CustomerMemo = new()
-            {
-                Value = Msg
-            };
+            //CustomerMemo = new()
+            //{
+            //    Value = Msg
+            //};
 
             taxLineDetail = new()
             {
