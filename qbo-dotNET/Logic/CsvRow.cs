@@ -26,13 +26,14 @@ namespace qbo_dotNET.Logic
             //    PostalCode = BillAddrPostalCode,
             //    Country = BillAddrCountry
             //};
-            //BillEmail = new()
-            //{ Address = BillEmailCsv };
 
-            //CustomerMemo = new()
-            //{
-            //    Value = Msg
-            //};
+            BillEmail = new()
+            { Address = BillEmailCsv };
+
+            CustomerMemo = new()
+            {
+                Value = Msg
+            };
 
             taxLineDetail = new()
             {
