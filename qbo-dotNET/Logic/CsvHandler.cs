@@ -3,6 +3,7 @@ using System.Globalization;
 using AutoMapper;
 using CsvHelper;
 using Intuit.Ipp.Data;
+using Intuit.Ipp.OAuth2PlatformClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -140,7 +141,7 @@ namespace qbo_dotNET.Logic
                 }
                 else
                 {
-                    _logger.LogInformation("Not found, " + row.Customer);
+                    _logger.LogInformation("Not found, " + row.LineDesc);
                     item = new();
                     item.sparse = true;
                     item.TypeSpecified = true;
@@ -168,6 +169,10 @@ namespace qbo_dotNET.Logic
                 bool updated = false;
                 _logger.LogWarning("Found customer, " + customer.DisplayName);
 
+                if (customer.PrimaryEmailAddr.Address != row.BillEmailCsv)
+                {
+                    customer.PrimaryEmailAddr.Address = row.BillEmailCsv;
+                }
                 if (customer.BillAddr != row.BillAddr || customer.ShipAddr != row.ShipAddr)
                 {
                     customer.BillAddr = row.BillAddr;
@@ -190,9 +195,12 @@ namespace qbo_dotNET.Logic
             {
                 customer = new();
                 _logger.LogInformation("Not found, " + row.Customer);
+                
                 customer.DisplayName = row.Customer;
                 customer.BillAddr = row.BillAddr;
                 customer.ShipAddr = row.ShipAddr;
+                customer.PrimaryEmailAddr.Address = row.BillEmailCsv;
+                
                 Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                 customer = await returnedCustomerResult;
                 await _api.updateCustomerDictionary();
