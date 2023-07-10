@@ -22,8 +22,8 @@ namespace qbo_dotNET.Logic
         {
             try
             {
-                _logger.LogInformation("Beginning to format data");
-                _logger.LogInformation(rawData);
+                _logger.LogWarning("Beginning to format data");
+                _logger.LogWarning(rawData);
 
                 Stopwatch watch = new();
                 watch.Start();
@@ -91,19 +91,19 @@ namespace qbo_dotNET.Logic
               invoice, Formatting.Indented,
            new JsonConverter[] { new StringEnumConverter() });
 
-                        _logger.LogInformation("Added invoice " + jsonString);
+                        _logger.LogWarning("Added invoice " + jsonString);
                         finalInvoiceList.Add(invoice);
                     }
 
                     finalInvoiceList.Reverse();
-                    _logger.LogInformation("Done sorting items and lines");
+                    _logger.LogWarning("Done sorting items and lines");
                     watch.Stop();
                     TimeSpan ts = watch.Elapsed;
                     string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                         ts.Hours, ts.Minutes, ts.Seconds,
                         ts.Milliseconds / 10);
 
-                    _logger.LogInformation("sorted in: " + elapsedTime);
+                    _logger.LogWarning("sorted in: " + elapsedTime);
 
                 }
             }
@@ -119,7 +119,7 @@ namespace qbo_dotNET.Logic
                 {
                     bool updated = false;
 
-                    //_logger.LogInformation("Found, " + item.Name);
+                    //_logger.LogWarning("Found, " + item.Name);
                     if (!item.Active)
                     {
                         item.Active = true;
@@ -141,7 +141,7 @@ namespace qbo_dotNET.Logic
                 }
                 else
                 {
-                    _logger.LogInformation("Not found, " + row.LineDesc);
+                    _logger.LogWarning("Not found, " + row.LineDesc);
                     item = new();
                     item.sparse = true;
                     item.TypeSpecified = true;
@@ -156,7 +156,7 @@ namespace qbo_dotNET.Logic
                 }
                 return item;
             }
-            catch (Exception ex) { _logger.LogInformation(ex.Data + ex.Message + ex.StackTrace + item.Name); }
+            catch (Exception ex) { _logger.LogWarning(ex.Data + ex.Message + ex.StackTrace + item.Name); }
             return new Item();
         }
 
@@ -194,7 +194,7 @@ namespace qbo_dotNET.Logic
             else
             {
                 customer = new();
-                _logger.LogInformation("Not found, " + row.Customer);
+                _logger.LogWarning("Not found, " + row.Customer);
                 
                 customer.DisplayName = row.Customer;
                 customer.BillAddr = row.BillAddr;
