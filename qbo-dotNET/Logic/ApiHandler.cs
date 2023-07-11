@@ -11,6 +11,7 @@ using Intuit.Ipp.DataService;
 using Microsoft.AspNetCore.SignalR.Protocol;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Newtonsoft.Json;
 
 namespace qbo_dotNET.Logic
 {
@@ -73,8 +74,11 @@ namespace qbo_dotNET.Logic
             IEnumerable<Customer> customerList = service.FindAll(c).ToList();
             IEnumerable<Item> itemList = service.FindAll(i).ToList();
 
-            customerDictionary = customerList.ToDictionary(c => c.DisplayName, c => c, StringComparer.OrdinalIgnoreCase);
-            itemDictionary = itemList.ToDictionary(i => i.Name, i => i, StringComparer.OrdinalIgnoreCase);
+            _logger.LogWarning(JsonConvert.SerializeObject(customerList, Formatting.Indented));
+            _logger.LogWarning(JsonConvert.SerializeObject(itemList, Formatting.Indented));
+            
+            customerDictionary = customerList.ToDictionary(x => x.DisplayName, x => x, StringComparer.OrdinalIgnoreCase);
+            itemDictionary = itemList.ToDictionary(y => y.Name, y => y, StringComparer.OrdinalIgnoreCase);
 
         }
 
