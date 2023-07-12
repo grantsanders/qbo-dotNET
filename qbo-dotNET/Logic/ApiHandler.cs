@@ -71,8 +71,8 @@ namespace qbo_dotNET.Logic
             Customer c = new();
             Item i = new();
 
-            IEnumerable<Customer> customerList = service.FindAll(c, 1, 10000);
-            IEnumerable<Item> itemList = service.FindAll(i, 1, 10000);
+            IEnumerable<Customer> customerList = service.FindAll(c, 1, 1000);
+            IEnumerable<Item> itemList = service.FindAll(i, 1, 1000);
 
             customerDictionary = customerList
                 .DistinctBy(x => x.DisplayName, StringComparer.OrdinalIgnoreCase)
