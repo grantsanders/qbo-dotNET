@@ -58,7 +58,7 @@ namespace qbo_dotNET.Logic
             OAuth2RequestValidator oAuth2RequestValidator = new OAuth2RequestValidator(accessToken);
             serviceContext = new ServiceContext(realmId, IntuitServicesType.QBO, oAuth2RequestValidator);
             serviceContext.IppConfiguration.BaseUrl.Qbo = "https://quickbooks.api.intuit.com/";
-            serviceContext.IppConfiguration.MinorVersion.Qbo = "55";
+            // serviceContext.IppConfiguration.MinorVersion.Qbo = "55";
             service = new DataService(serviceContext);
 
             await getWorkingLists();
@@ -74,8 +74,12 @@ namespace qbo_dotNET.Logic
             IEnumerable<Customer> customerList = service.FindAll(c);
             IEnumerable<Item> itemList = service.FindAll(i);
 
-            customerDictionary = customerList.ToDictionary(x => x.DisplayName, x => x, StringComparer.OrdinalIgnoreCase);
-            itemDictionary = itemList.ToDictionary(y => y.Name, y => y, StringComparer.OrdinalIgnoreCase);
+            customerDictionary = customerList
+                .DistinctBy(x => x.DisplayName, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(x => x.DisplayName, x => x, StringComparer.OrdinalIgnoreCase);
+            itemDictionary = itemList
+                .DistinctBy(y => y.Name, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(y => y.Name, y => y, StringComparer.OrdinalIgnoreCase);
             _logger.LogWarning($"Customer count {customerDictionary.Count}");
             _logger.LogWarning($"Item count {itemDictionary.Count}");
 
