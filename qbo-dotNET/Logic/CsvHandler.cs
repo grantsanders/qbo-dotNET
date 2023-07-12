@@ -165,6 +165,7 @@ namespace qbo_dotNET.Logic
         public async System.Threading.Tasks.Task<Customer> validateCustomer(CsvRow row)
         {
             Customer customer = new();
+            _logger.LogError(row.Customer);
             if (_api.customerDictionary.TryGetValue(row.Customer, out customer))
             {
                 bool updated = false;
