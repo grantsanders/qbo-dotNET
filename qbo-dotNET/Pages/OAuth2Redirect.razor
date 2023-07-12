@@ -75,7 +75,7 @@
                     .FirstOrDefault(s => s.StartsWith("realmId="))
                     ?.Split('=')[1];
 
-                apiHandler.getServiceContext();
+                await apiHandler.getServiceContext();
 
                 logger.LogInformation("Service Context Retrieved");
             }
