@@ -173,7 +173,7 @@ namespace qbo_dotNET.Logic
                 bool updated = false;
                 _logger.LogWarning("Found customer, " + customer.DisplayName);
 
-                if (customer.PrimaryEmailAddr.Address != row.BillEmailCsv)
+                if (customer.PrimaryEmailAddr?.Address != row.BillEmailCsv)
                 {
                     customer.PrimaryEmailAddr.Address = row.BillEmailCsv;
                 }
