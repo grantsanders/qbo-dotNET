@@ -114,6 +114,7 @@ namespace qbo_dotNET.Logic
             Item item = new();
             try
             {
+                _logger.LogError(row.LineDesc);
                 if (_api.itemDictionary.TryGetValue(row.LineDesc, out item))
                 {
                     bool updated = false;
