@@ -152,8 +152,11 @@ namespace qbo_dotNET.Logic
                     item.IncomeAccountRef = new ReferenceType() { Value = "1" };
                     item.UnitPrice = (decimal.Parse(row.LineUnitPrice));
 
-                    Task<Item> returnedItemResult = _api.updateItem(item);
-                    item = await returnedItemResult;
+                    try
+                    {
+                        item = await _api.updateItem(item);
+                    } catch (Exception ex) {_logger.LogError($"Error updating item: {ex.Message} {ex.StackTrace} {ex.Data}");}
+
                     // await _api.updateItemDictionary();
                     _api.itemDictionary.Add(item.Name, item);
                 }
