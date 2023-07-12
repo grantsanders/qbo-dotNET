@@ -75,9 +75,9 @@ namespace qbo_dotNET.Logic
             IEnumerable<Item> itemList = service.FindAll(i);
 
             customerDictionary = customerList.ToDictionary(x => x.DisplayName, x => x, StringComparer.OrdinalIgnoreCase);
-            _logger.LogCritical($"Customer count {customerDictionary.Count}");
             itemDictionary = itemList.ToDictionary(y => y.Name, y => y, StringComparer.OrdinalIgnoreCase);
-            _logger.LogCritical($"Item count {itemDictionary.Count}");
+            _logger.LogWarning($"Customer count {customerDictionary.Count}");
+            _logger.LogWarning($"Item count {itemDictionary.Count}");
 
         }
 
