@@ -135,7 +135,8 @@ namespace qbo_dotNET.Logic
                     {
                         Task<Item> returnedItemResult = _api.updateItem(item);
                         item = await returnedItemResult;
-                        await _api.updateItemDictionary();
+                        // await _api.updateItemDictionary();
+                        _api.itemDictionary.Add(item.Name, item);
                     }
                 }
                 else
@@ -151,7 +152,8 @@ namespace qbo_dotNET.Logic
 
                     Task<Item> returnedItemResult = _api.updateItem(item);
                     item = await returnedItemResult;
-                    await _api.updateItemDictionary();
+                    // await _api.updateItemDictionary();
+                    _api.itemDictionary.Add(item.Name, item);
                 }
                 return item;
             }
@@ -187,7 +189,8 @@ namespace qbo_dotNET.Logic
                 {
                     Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                     customer = await returnedCustomerResult;
-                    await _api.updateCustomerDictionary();
+                    // await _api.updateCustomerDictionary();
+                    _api.customerDictionary.Add(customer.DisplayName, customer);
                 }
             }
             else
@@ -202,7 +205,9 @@ namespace qbo_dotNET.Logic
                 
                 Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                 customer = await returnedCustomerResult;
-                await _api.updateCustomerDictionary();
+                // await _api.updateCustomerDictionary();
+                _api.customerDictionary.Add(customer.DisplayName, customer);
+
             }
             return customer;
         }

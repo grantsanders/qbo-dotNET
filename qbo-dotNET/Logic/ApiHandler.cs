@@ -61,12 +61,12 @@ namespace qbo_dotNET.Logic
             serviceContext.IppConfiguration.MinorVersion.Qbo = "55";
             service = new DataService(serviceContext);
 
-            getWorkingLists();
+            await getWorkingLists();
 
-            _logger.LogWarning("Working lists updated");
+            _logger.LogInformation("Working lists updated");
         }
 
-        public void getWorkingLists()
+        public async System.Threading.Tasks.Task getWorkingLists()
         {
             Customer c = new();
             Item i = new();
@@ -75,6 +75,7 @@ namespace qbo_dotNET.Logic
             IEnumerable<Item> itemList = service.FindAll(i);
 
             customerDictionary = customerList.ToDictionary(x => x.DisplayName, x => x, StringComparer.OrdinalIgnoreCase);
+            
             itemDictionary = itemList.ToDictionary(y => y.Name, y => y, StringComparer.OrdinalIgnoreCase);
 
         }
@@ -91,15 +92,9 @@ namespace qbo_dotNET.Logic
             }
         }
 
-        public void updateCustomerDictionary()
-        {
-            customerDictionary =
-                service.FindAll(new Customer()).ToList()
-                    .ToDictionary(c => c.DisplayName, c => c, StringComparer.OrdinalIgnoreCase) ??
-                new Dictionary<string, Customer>(StringComparer.OrdinalIgnoreCase);
-        }
+        public async System.Threading.Tasks.Task updateCustomerDictionary() => customerDictionary = customerDictionary = service.FindAll(new Customer()).ToList().ToDictionary(c => c.DisplayName, c => c, StringComparer.OrdinalIgnoreCase) ?? new Dictionary<string, Customer>(StringComparer.OrdinalIgnoreCase);
 
-        public void updateItemDictionary()
+        public async System.Threading.Tasks.Task updateItemDictionary()
         {
             itemDictionary =
                 service.FindAll(new Item())
