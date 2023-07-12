@@ -80,6 +80,9 @@ namespace qbo_dotNET.Logic
             itemDictionary = itemList
                 .DistinctBy(y => y.Name, StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(y => y.Name, y => y, StringComparer.OrdinalIgnoreCase);
+            
+            string keysString = string.Join(Environment.NewLine, customerDictionary.Keys);
+            _logger.LogWarning(keysString);
             _logger.LogWarning($"Customer count {customerDictionary.Count}");
             _logger.LogWarning($"Item count {itemDictionary.Count}");
 
