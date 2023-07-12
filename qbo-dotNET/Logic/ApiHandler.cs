@@ -61,22 +61,19 @@ namespace qbo_dotNET.Logic
             serviceContext.IppConfiguration.MinorVersion.Qbo = "55";
             service = new DataService(serviceContext);
 
-            await getWorkingLists();
+            getWorkingLists();
 
-            _logger.LogInformation("Working lists updated");
+            _logger.LogWarning("Working lists updated");
         }
 
-        public async System.Threading.Tasks.Task getWorkingLists()
+        public void getWorkingLists()
         {
             Customer c = new();
             Item i = new();
 
-            IEnumerable<Customer> customerList = service.FindAll(c).ToList();
-            IEnumerable<Item> itemList = service.FindAll(i).ToList();
+            IEnumerable<Customer> customerList = service.FindAll(c);
+            IEnumerable<Item> itemList = service.FindAll(i);
 
-            _logger.LogWarning(JsonConvert.SerializeObject(customerList, Formatting.Indented));
-            _logger.LogWarning(JsonConvert.SerializeObject(itemList, Formatting.Indented));
-            
             customerDictionary = customerList.ToDictionary(x => x.DisplayName, x => x, StringComparer.OrdinalIgnoreCase);
             itemDictionary = itemList.ToDictionary(y => y.Name, y => y, StringComparer.OrdinalIgnoreCase);
 
@@ -91,13 +88,24 @@ namespace qbo_dotNET.Logic
                 Invoice returnedInvoice = service.Add<Invoice>(invoice);
                 _logger.LogInformation("Invoice added: " + invoice.CustomerRef.name);
                 postedInvoiceList.Add(returnedInvoice);
-
             }
         }
 
-        public async System.Threading.Tasks.Task updateCustomerDictionary() => customerDictionary = customerDictionary = service.FindAll(new Customer()).ToList().ToDictionary(c => c.DisplayName, c => c, StringComparer.OrdinalIgnoreCase) ?? new Dictionary<string, Customer>(StringComparer.OrdinalIgnoreCase);
+        public void updateCustomerDictionary()
+        {
+            customerDictionary =
+                service.FindAll(new Customer()).ToList()
+                    .ToDictionary(c => c.DisplayName, c => c, StringComparer.OrdinalIgnoreCase) ??
+                new Dictionary<string, Customer>(StringComparer.OrdinalIgnoreCase);
+        }
 
-        public async System.Threading.Tasks.Task updateItemDictionary() => itemDictionary = service.FindAll(new Item()).ToList().ToDictionary(i => i.Name, i => i, StringComparer.OrdinalIgnoreCase) ?? new Dictionary<string, Item>(StringComparer.OrdinalIgnoreCase);
+        public void updateItemDictionary()
+        {
+            itemDictionary =
+                service.FindAll(new Item())
+                    .ToDictionary(i => i.Name, i => i, StringComparer.OrdinalIgnoreCase) ??
+                new Dictionary<string, Item>(StringComparer.OrdinalIgnoreCase);
+        }
 
         public async System.Threading.Tasks.Task<Item> updateItem(Item item) { return await System.Threading.Tasks.Task.FromResult(service.Update<Item>(item)); }
 
