@@ -207,8 +207,11 @@ namespace qbo_dotNET.Logic
                 customer.DisplayName = row.Customer;
                 customer.BillAddr = row.BillAddr;
                 customer.ShipAddr = row.ShipAddr;
-                customer.PrimaryEmailAddr.Address = row.BillEmailCsv;
-                
+                try
+                {
+                    if (row.BillEmailCsv != null) customer.PrimaryEmailAddr = new() { Address = row.BillEmailCsv };
+                } catch (Exception ex) {_logger.LogError($"bruh another one \n{ex.Message}\n{ex.StackTrace}\n{ex.Data}");}
+
                 Task<Customer> returnedCustomerResult = _api.updateCustomer(customer);
                 customer = await returnedCustomerResult;
                 // await _api.updateCustomerDictionary();
